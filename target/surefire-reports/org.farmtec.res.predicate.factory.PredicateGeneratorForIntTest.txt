@@ -1,4 +1,0 @@
--------------------------------------------------------------------------------
-Test set: org.farmtec.res.predicate.factory.PredicateGeneratorForIntTest
--------------------------------------------------------------------------------
-Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.128 s - in org.farmtec.res.predicate.factory.PredicateGeneratorForIntTest
