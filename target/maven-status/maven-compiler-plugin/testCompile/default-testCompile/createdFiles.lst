@@ -1,0 +1,9 @@
+org/farmtec/res/rules/impl/RuleGroupCompositeTest.class
+org/farmtec/res/enums/OperationTest.class
+org/farmtec/res/predicate/factory/PredicateGeneratorForStrTest.class
+org/farmtec/res/rules/impl/StringRuleLeafTest.class
+org/farmtec/res/predicate/factory/PredicateGeneratorForIntTest.class
+org/farmtec/res/App.class
+org/farmtec/res/AppTest.class
+org/farmtec/res/rules/impl/IntegerRuleLeafTest.class
+org/farmtec/res/enums/LogicalOperationTest.class

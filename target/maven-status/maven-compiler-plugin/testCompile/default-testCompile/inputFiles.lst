@@ -1,0 +1,9 @@
+/home/daniel/workplace/java/ruleevaluator/src/test/java/org/farmtec/res/enums/OperationTest.java
+/home/daniel/workplace/java/ruleevaluator/src/test/java/org/farmtec/res/enums/LogicalOperationTest.java
+/home/daniel/workplace/java/ruleevaluator/src/test/java/org/farmtec/res/predicate/factory/PredicateGeneratorForIntTest.java
+/home/daniel/workplace/java/ruleevaluator/src/test/java/org/farmtec/res/rules/impl/IntegerRuleLeafTest.java
+/home/daniel/workplace/java/ruleevaluator/src/test/java/org/farmtec/res/AppTest.java
+/home/daniel/workplace/java/ruleevaluator/src/test/java/org/farmtec/res/App.java
+/home/daniel/workplace/java/ruleevaluator/src/test/java/org/farmtec/res/rules/impl/RuleGroupCompositeTest.java
+/home/daniel/workplace/java/ruleevaluator/src/test/java/org/farmtec/res/predicate/factory/PredicateGeneratorForStrTest.java
+/home/daniel/workplace/java/ruleevaluator/src/test/java/org/farmtec/res/rules/impl/StringRuleLeafTest.java
