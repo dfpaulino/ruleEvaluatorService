@@ -18,7 +18,7 @@ public abstract class RuleGroupComposite implements RuleComponent {
 
     @Override
     public boolean testRule(JsonNode jsonNode) {
-        //TODO loop the components and test the operationreturn false;
+        //TODO loop the components and test the operation return false;
         List<Boolean> booleanList=this.getRules().parallelStream().map((rule)->rule.testRule(jsonNode)).collect(Collectors.toList());
         boolean bool=false;
         if (booleanList.size()==1) {

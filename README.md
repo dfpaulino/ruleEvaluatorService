@@ -55,8 +55,8 @@ NOT CONTAINS|||yes | no
 For each type there is a predicate factory, that generates the supported operations for the given type
 
 each type requires the equivalent type of predicate factory
-StringRuleLeaf, requires predicateFactory<String>
-IntegerRuleLeaf, requires predicateFactory<Integer>
+StringRuleLeaf, requires predicateFactory\<String\>
+IntegerRuleLeaf, requires predicateFactory\<Integer\>
 There are already pre defined factories for each type. You can can inject your own factory if needed
 
 Once the predicates/leafs are configured, you then configure the childGroups (composites)

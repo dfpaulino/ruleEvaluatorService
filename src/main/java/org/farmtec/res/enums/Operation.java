@@ -1,5 +1,8 @@
 package org.farmtec.res.enums;
 
+/**
+ * Operation between {@code org.farmtec.res.rules.RuleComponent}
+ */
 public enum Operation {
     EQ("=="),
     NEQ("<>"),

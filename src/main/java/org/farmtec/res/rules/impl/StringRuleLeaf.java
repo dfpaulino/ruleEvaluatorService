@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import org.farmtec.res.enums.Operation;
 import org.farmtec.res.predicate.factory.PredicateFactory;
 import org.farmtec.res.rules.RuleComponent;
+import org.farmtec.res.service.exceptions.InvalidOperation;
 import org.immutables.value.Value;
 
 import java.util.function.Predicate;
