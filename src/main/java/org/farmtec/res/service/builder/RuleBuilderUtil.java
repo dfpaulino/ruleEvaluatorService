@@ -1,6 +1,5 @@
 package org.farmtec.res.service.builder;
 
-import com.fasterxml.jackson.core.JsonParser;
 import org.farmtec.res.enums.LogicalOperation;
 import org.farmtec.res.enums.Operation;
 import org.farmtec.res.predicate.factory.PredicateFactory;
@@ -8,10 +7,10 @@ import org.farmtec.res.rules.RuleComponent;
 import org.farmtec.res.rules.impl.ImmutableIntegerRuleLeaf;
 import org.farmtec.res.rules.impl.ImmutableRuleGroupComposite;
 import org.farmtec.res.rules.impl.ImmutableStringRuleLeaf;
-import org.farmtec.res.rules.impl.RuleGroupComposite;
 import org.farmtec.res.service.exceptions.InvalidOperation;
+import org.farmtec.res.service.model.Action;
+import org.farmtec.res.service.model.ImmutableRule;
 import org.farmtec.res.service.model.Rule;
-
 import java.util.List;
 
 
@@ -26,6 +25,7 @@ public class RuleBuilderUtil {
         private String name;
         private int priority;
         private RuleComponent ruleComponent;
+        private List<Action> actions;
 
         private RuleBuilder() {
         }
@@ -44,13 +44,22 @@ public class RuleBuilderUtil {
             return this;
         }
 
-        public RuleBuilder setRuleComponent(RuleGroupComposite ruleGroupComposite) {
+        /**
+         * @param ruleGroupComposite {@Code RuleComponent} that is composed by other {@code RuleGroupComposite}
+         * @return {@code RuleBuilder}
+         */
+        public RuleBuilder setRuleComponent(RuleComponent ruleGroupComposite) {
             this.ruleComponent = ruleGroupComposite;
             return this;
         }
 
+        public RuleBuilder setActions(List<Action> actions) {
+            this.actions = actions;
+            return this;
+        }
+
         public Rule build() {
-            return null;
+            return ImmutableRule.of(this.name, this.ruleComponent, this.priority, this.actions);
         }
 
     }
@@ -88,7 +97,7 @@ public class RuleBuilderUtil {
          * Add {@code RuleComposite}, this can be either base rules {@code RuleComponent} or
          * composite group of base rules {@code RuleGroupComposite}
          *
-         * @param ruleComponentList
+         * @param ruleComponentList lis of {@code RuleComponent}
          * @return {@code RuleComponentBuilder}
          */
         public RuleComponentBuilder setRuleComponentList(List<RuleComponent> ruleComponentList) {
@@ -113,12 +122,12 @@ public class RuleBuilderUtil {
         private String tag;
         private Class<?> type;
         private String value;
-        private PredicateFactory<Integer> integerPredicateFactory;
-        private PredicateFactory<String> stringPredicateFactory;
+        private final PredicateFactory<Integer> integerPredicateFactory;
+        private final PredicateFactory<String> stringPredicateFactory;
 
 
-        private RulePredicateBuilder(PredicateFactory<Integer> integerPredicateFactory,
-                                     PredicateFactory<String> stringPredicateFactory) {
+        private RulePredicateBuilder(final PredicateFactory<Integer> integerPredicateFactory,
+                                     final PredicateFactory<String> stringPredicateFactory) {
             this.integerPredicateFactory = integerPredicateFactory;
             this.stringPredicateFactory = stringPredicateFactory;
         }
@@ -186,18 +195,18 @@ public class RuleBuilderUtil {
             //bit of validation
 
             if (this.type == Integer.class) {
-                int valueInt = Integer.valueOf(this.value);
+                Integer valueInt = Integer.valueOf(this.value);
                 if (null == integerPredicateFactory.getPredicate(this.operation, valueInt)) {
                     String error = String.format("Operation Not supported for tag [%s] operation [%s] value [%s]", this.tag, this.operation.name(), this.value);
                     throw new InvalidOperation(error);
                 }
-                ruleComponent = ImmutableIntegerRuleLeaf.of(this.tag, this.operation, Integer.valueOf(this.value), integerPredicateFactory);
+                ruleComponent = ImmutableIntegerRuleLeaf.of(this.tag, this.operation, valueInt, Integer.class, integerPredicateFactory);
             } else if (this.type == String.class) {
                 if (null == stringPredicateFactory.getPredicate(this.operation, this.value)) {
                     String error = String.format("Operation Not supported for tag [%s] operation [%s] value [%s]", this.tag, this.operation.name(), this.value);
                     throw new InvalidOperation(error);
                 }
-                ruleComponent = ImmutableStringRuleLeaf.of(this.tag, this.operation, this.value, stringPredicateFactory);
+                ruleComponent = ImmutableStringRuleLeaf.of(this.tag, this.operation, this.value, String.class, stringPredicateFactory);
             } else {
                 String error = String.format("Type not Supported Predicate for tag [%s] operation [%s] value [%s]", this.tag, this.operation.name(), this.value);
                 throw new InvalidOperation(error);

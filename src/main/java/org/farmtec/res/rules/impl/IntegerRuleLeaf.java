@@ -16,11 +16,14 @@ public abstract class IntegerRuleLeaf implements RuleComponent {
     public abstract Operation getOperation();
     @Value.Parameter
     public abstract int getValue();
+
+    @Value.Parameter
+    public abstract Class<?> getType();
+
     @Value.Parameter
     public abstract PredicateFactory<Integer> getPredicateFactory();
 
-    private Predicate<Integer> predicate;
-
+    private transient Predicate<Integer> predicate;
 
     @Override
     public boolean testRule(JsonNode jsonNode) {
@@ -30,7 +33,7 @@ public abstract class IntegerRuleLeaf implements RuleComponent {
         }
         boolean bool=false;
         if (jsonNode.has(this.getTag())) {
-            //TODO vaalidate that the value is really integer?...or keep on going?
+            //TODO validate that the value is really integer?...or keep on going?
             bool = predicate.test(jsonNode.get(this.getTag()).asInt());
         }
         return bool;

@@ -32,7 +32,7 @@ class StringRuleLeafTest {
     void testRule_shouldBeTrueAndInvokeOnce() throws Exception{
         //given
         Mockito.when(predicateFactoryMock.getPredicate(any(Operation.class), anyString())).thenReturn((x) -> x.equals(VALUE));
-        StringRuleLeaf stringRuleLeaf = ImmutableStringRuleLeaf.of("tag1", Operation.EQ, VALUE, predicateFactoryMock);
+        StringRuleLeaf stringRuleLeaf = ImmutableStringRuleLeaf.of("tag1", Operation.EQ, VALUE, String.class, predicateFactoryMock);
         ObjectMapper mapper = new ObjectMapper();
         JsonNode actualObj = mapper.readTree(jsonString);
 
@@ -50,7 +50,7 @@ class StringRuleLeafTest {
     void testRule_UnkownTag_shouldBeFalseAndInvokeOnce() throws Exception{
         //given
         Mockito.when(predicateFactoryMock.getPredicate(any(Operation.class), anyString())).thenReturn((x) -> x.equals(VALUE));
-        StringRuleLeaf stringRuleLeaf = ImmutableStringRuleLeaf.of("tag", Operation.EQ, VALUE, predicateFactoryMock);
+        StringRuleLeaf stringRuleLeaf = ImmutableStringRuleLeaf.of("tag", Operation.EQ, VALUE, String.class, predicateFactoryMock);
         ObjectMapper mapper = new ObjectMapper();
         JsonNode actualObj = mapper.readTree(jsonString);
 

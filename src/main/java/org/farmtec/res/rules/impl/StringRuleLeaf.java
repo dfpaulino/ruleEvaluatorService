@@ -22,6 +22,9 @@ public abstract class StringRuleLeaf implements RuleComponent {
     public abstract String getValue();
 
     @Value.Parameter
+    public abstract Class<?> getType();
+
+    @Value.Parameter
     public abstract PredicateFactory<String> getPredicateFactory();
 
     private Predicate<String> predicate=null;

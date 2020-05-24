@@ -35,7 +35,7 @@ class IntegerRuleLeafTest {
 
         //given
         Mockito.when(predicateFactoryMock.getPredicate(any(Operation.class), anyInt())).thenReturn((x) -> x > VALUE );
-        IntegerRuleLeaf integerRuleLeaf = ImmutableIntegerRuleLeaf.of("tag3", Operation.GT, VALUE, predicateFactoryMock);
+        IntegerRuleLeaf integerRuleLeaf = ImmutableIntegerRuleLeaf.of("tag3", Operation.GT, VALUE, Integer.class, predicateFactoryMock);
         ObjectMapper mapper = new ObjectMapper();
         JsonNode actualObj = mapper.readTree(jsonString);
 

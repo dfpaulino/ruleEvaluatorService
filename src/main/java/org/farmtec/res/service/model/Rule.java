@@ -3,6 +3,10 @@ package org.farmtec.res.service.model;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.farmtec.res.rules.RuleComponent;
 import org.immutables.value.Value;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.List;
 
 /**
  * This is immutable, as the rule is loaded into th object
@@ -16,9 +20,11 @@ import org.immutables.value.Value;
  */
 @Value.Immutable
 public abstract class Rule {
+    private static final Logger logger
+            = LoggerFactory.getLogger(Rule.class);
 
     @Value.Parameter
-    public abstract int getName();
+    public abstract String getName();
 
     @Value.Parameter
     public abstract RuleComponent getRuleGroupComposite();
@@ -26,7 +32,15 @@ public abstract class Rule {
     @Value.Parameter
     public abstract int getPriority();
 
+    @Value.Parameter
+    public abstract List<Action> getActions();
+
     public boolean test(JsonNode jsonNode) {
-        return this.getRuleGroupComposite().testRule(jsonNode);
+        boolean match = false;
+        match = this.getRuleGroupComposite().testRule(jsonNode);
+        if (logger.isDebugEnabled()) {
+            logger.debug("Rule Name: [{}] match: [{}]", this.getName(), match);
+        }
+        return match;
     }
 }
