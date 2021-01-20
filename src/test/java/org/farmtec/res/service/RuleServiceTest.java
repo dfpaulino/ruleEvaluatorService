@@ -8,7 +8,7 @@ import org.farmtec.res.predicate.factory.PredicateFactory;
 import org.farmtec.res.predicate.factory.impl.PredicateGeneratorForInt;
 import org.farmtec.res.predicate.factory.impl.PredicateGeneratorForStr;
 import org.farmtec.res.rules.RuleComponent;
-import org.farmtec.res.service.builder.RuleBuilderUtil;
+import org.farmtec.res.service.builder.utils.RuleBuilderUtil;
 import org.farmtec.res.service.model.ImmutableRule;
 import org.farmtec.res.service.model.Rule;
 import org.junit.jupiter.api.Assertions;
@@ -30,8 +30,6 @@ import static org.farmtec.res.enums.Operation.LT;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.booleanThat;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 class RuleServiceTest {

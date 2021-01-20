@@ -1,4 +1,4 @@
-package org.farmtec.res.service.builder;
+package org.farmtec.res.service.builder.utils;
 
 import org.farmtec.res.enums.LogicalOperation;
 import org.farmtec.res.enums.Operation;
@@ -17,9 +17,9 @@ import java.util.List;
 public class RuleBuilderUtil {
 
     /**
-     * Builder for {@code Rule}.
-     * Rule is a simple Object that contains the RuleComposite created by {@code RuleComponentBuilder}
-     * Should set a Name, priority and a {@code RuleGroupComposite}
+     * Builder for {@link Rule}.
+     * Rule is a simple Object that contains the RuleComposite created by {@link RuleComponentBuilder}
+     * Should set a Name, priority and a {@link org.farmtec.res.rules.impl.RuleGroupComposite}
      */
     public static class RuleBuilder {
         private String name;
