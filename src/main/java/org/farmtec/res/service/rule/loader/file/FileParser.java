@@ -15,6 +15,8 @@ public interface FileParser {
 
     boolean loadFile();
 
+    boolean loadFile(String filePathName);
+
     Map<String, LeafDto> getRuleLeafsDto();
 
     Map<String, GroupCompositeDto> getGroupCompositesDto();

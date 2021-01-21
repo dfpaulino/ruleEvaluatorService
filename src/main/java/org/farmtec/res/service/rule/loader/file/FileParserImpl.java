@@ -58,6 +58,7 @@ public class FileParserImpl implements FileParser {
         return openAndReadFile(this.filePathName);
     }
 
+    @Override
     public boolean loadFile(String filePathName) {
         this.filePathName = filePathName;
         return loadFile();

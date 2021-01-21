@@ -3,6 +3,8 @@ package org.farmtec.res.service.builder.utils;
 import org.farmtec.res.enums.LogicalOperation;
 import org.farmtec.res.enums.Operation;
 import org.farmtec.res.predicate.factory.PredicateFactory;
+import org.farmtec.res.predicate.factory.impl.PredicateGeneratorForInt;
+import org.farmtec.res.predicate.factory.impl.PredicateGeneratorForStr;
 import org.farmtec.res.rules.RuleComponent;
 import org.farmtec.res.rules.impl.ImmutableIntegerRuleLeaf;
 import org.farmtec.res.rules.impl.ImmutableRuleGroupComposite;
@@ -132,6 +134,7 @@ public class RuleBuilderUtil {
             this.stringPredicateFactory = stringPredicateFactory;
         }
 
+
         /**
          * RulePredicateBuilder allows to create a base rule {@code RuleComponent}
          * Its required to inject {@code PredicateFactory} for each type
@@ -142,6 +145,18 @@ public class RuleBuilderUtil {
          */
         public static RulePredicateBuilder newInstance(PredicateFactory<Integer> integerPredicateFactory,
                                                        PredicateFactory<String> stringPredicateFactory) {
+            return new RulePredicateBuilder(integerPredicateFactory, stringPredicateFactory);
+        }
+
+        /**
+         * RulePredicateBuilder allows to create a base rule {@code RuleComponent}
+         * Uses default Predicate Factories
+         *
+         * @return {@code RuleComponent}
+         */
+        public static RulePredicateBuilder newInstance() {
+            PredicateFactory<Integer> integerPredicateFactory = new PredicateGeneratorForInt();
+            PredicateFactory<String> stringPredicateFactory = new PredicateGeneratorForStr();
             return new RulePredicateBuilder(integerPredicateFactory, stringPredicateFactory);
         }
 

@@ -12,4 +12,5 @@ public interface RuleLoaderService {
     List<Rule> getRules();
 
     void refreshRules();
+
 }
