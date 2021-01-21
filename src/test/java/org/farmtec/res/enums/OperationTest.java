@@ -9,7 +9,7 @@ class OperationTest {
     @Test
     void fromString_equals() {
         //given
-        String eq="==";
+        String eq = "EQ";
         //when
         Operation operation=Operation.fromString(eq);
         //then
@@ -19,7 +19,7 @@ class OperationTest {
     @Test
     void fromString_not_equals() {
         //given
-        String eq="<>";
+        String eq = "NEQ";
         //when
         Operation operation=Operation.fromString(eq);
         //then
@@ -28,7 +28,7 @@ class OperationTest {
     @Test
     void fromString_lessThan() {
         //given
-        String eq="<";
+        String eq = "LT";
         //when
         Operation operation=Operation.fromString(eq);
         //then
@@ -37,7 +37,7 @@ class OperationTest {
     @Test
     void fromString_greaterThan() {
         //given
-        String eq=">";
+        String eq = "GT";
         //when
         Operation operation=Operation.fromString(eq);
         //then
@@ -45,7 +45,7 @@ class OperationTest {
     }
     void fromString_lessOrEqualsThan() {
         //given
-        String eq="<=";
+        String eq = "LTE";
         //when
         Operation operation=Operation.fromString(eq);
         //then
@@ -54,7 +54,7 @@ class OperationTest {
     @Test
     void fromString_greaterOrEqualsThan() {
         //given
-        String eq=">=";
+        String eq = "GTE";
         //when
         Operation operation=Operation.fromString(eq);
         //then

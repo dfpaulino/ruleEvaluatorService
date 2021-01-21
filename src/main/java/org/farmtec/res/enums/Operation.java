@@ -4,12 +4,12 @@ package org.farmtec.res.enums;
  * Operation between {@code org.farmtec.res.rules.RuleComponent}
  */
 public enum Operation {
-    EQ("=="),
-    NEQ("<>"),
-    GT(">"),
-    LT("<"),
-    GTE(">="),
-    LTE("<="),
+    EQ("EQ"),
+    NEQ("NEQ"),
+    GT("GT"),
+    LT("LT"),
+    GTE("GTE"),
+    LTE("LTE"),
     CONTAINS("CONTAINS"),
     NOT_CONTAINS("NOT CONTAINS");
 
