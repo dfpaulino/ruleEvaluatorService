@@ -18,7 +18,7 @@ class RuleLoaderServiceFileImplTest {
     void refreshRules() {
         //given
         RuleLoaderService ruleLoaderService = new RuleLoaderServiceFileImpl(
-                new FileParserImpl("src/test/resources/rules101.cfg"));
+                new FileParserImpl("src/test/resources/rulesNestsGroups.cfg"));
         //when
         ruleLoaderService.refreshRules();
     }
