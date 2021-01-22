@@ -2,6 +2,7 @@ package org.farmtec.res.service.rule.loader;
 
 import org.farmtec.res.service.model.Rule;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -13,4 +14,9 @@ public interface RuleLoaderService {
 
     void refreshRules();
 
+    public Date getLastUpdateTime();
+
+    public boolean isLoadRuleDone();
+
+    public boolean isLoadRuleSuccess();
 }

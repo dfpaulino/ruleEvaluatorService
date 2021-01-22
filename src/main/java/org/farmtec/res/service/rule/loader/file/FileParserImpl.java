@@ -79,6 +79,7 @@ public class FileParserImpl implements FileParser {
         try (BufferedReader br = Files.newBufferedReader(path, StandardCharsets.UTF_8)) {
 
             while (null != (line = br.readLine())) {
+                line = line.trim();
                 if (!line.isEmpty() && !line.startsWith("#")) {
                     logger.trace("reading line [{}]", line);
                     //validate group and name
@@ -96,42 +97,46 @@ public class FileParserImpl implements FileParser {
                         currentRuleDto = new RuleDto();
                     } else {
                         //remove any spaces, and split by =
-                        String[] attributeValuePair = line.replace(" ", "").split("=");
+                        String[] attributeValuePair = line.split("=");
+                        if (attributeValuePair.length == 2) {
+                            attributeValuePair[0] = attributeValuePair[0].trim();
+                            attributeValuePair[1] = attributeValuePair[1].trim();
+                            switch (currentGroupType) {
+                                case PREDICATE:
+                                    if (setCurrentLeafAttrAndCheckIsComplete(currentLeafDto,
+                                            attributeValuePair[0].toLowerCase(),
+                                            attributeValuePair[1])) {
+                                        leafDtoMap.put(currentGroupName, currentLeafDto);
+                                        currentGroupType = GroupType.NONE;
+                                        logger.info("Predicate [{}] was added with value [{}]"
+                                                , currentGroupName, currentLeafDto.toString());
+                                    }
+                                    break;
+                                case GROUP_COMPOSITE:
+                                    if (setCurrentGroupCompositeAttrAndCheckIsComplete(currentGroupCompositeDto,
+                                            attributeValuePair[0],
+                                            attributeValuePair[1])) {
+                                        groupCompositeDtoMap.put(currentGroupName, currentGroupCompositeDto);
+                                        currentGroupType = GroupType.NONE;
+                                        logger.info("Group [{}] was added with value [{}]"
+                                                , currentGroupName, currentGroupCompositeDto.toString());
+                                    }
+                                    break;
+                                case RULE:
+                                    if (setCurrentRuleAttrAndCheckIsComplete(currentRuleDto,
+                                            attributeValuePair[0],
+                                            attributeValuePair[1])) {
+                                        ruleDtoMap.put(currentGroupName, currentRuleDto);
+                                        currentGroupType = GroupType.NONE;
+                                        logger.info("Rule [{}] was added with value [{}]"
+                                                , currentGroupName, currentRuleDto.toString());
+                                    }
+                                    break;
+                                default:
+                                    logger.warn("elements out of order? [{}]", line);
+                            }
+                        } // end ttributeValuePair.length == 2
 
-                        switch (currentGroupType) {
-                            case PREDICATE:
-                                if (setCurrentLeafAttrAndCheckIsComplete(currentLeafDto,
-                                        attributeValuePair[0].toLowerCase(),
-                                        attributeValuePair[1])) {
-                                    leafDtoMap.put(currentGroupName, currentLeafDto);
-                                    currentGroupType = GroupType.NONE;
-                                    logger.info("Predicate [{}] was added with value [{}]"
-                                            , currentGroupName, currentLeafDto.toString());
-                                }
-                                break;
-                            case GROUP_COMPOSITE:
-                                if (setCurrentGroupCompositeAttrAndCheckIsComplete(currentGroupCompositeDto,
-                                        attributeValuePair[0],
-                                        attributeValuePair[1])) {
-                                    groupCompositeDtoMap.put(currentGroupName, currentGroupCompositeDto);
-                                    currentGroupType = GroupType.NONE;
-                                    logger.info("Group [{}] was added with value [{}]"
-                                            , currentGroupName, currentGroupCompositeDto.toString());
-                                }
-                                break;
-                            case RULE:
-                                if (setCurrentRuleAttrAndCheckIsComplete(currentRuleDto,
-                                        attributeValuePair[0],
-                                        attributeValuePair[1])) {
-                                    ruleDtoMap.put(currentGroupName, currentRuleDto);
-                                    currentGroupType = GroupType.NONE;
-                                    logger.info("Rule [{}] was added with value [{}]"
-                                            , currentGroupName, currentRuleDto.toString());
-                                }
-                                break;
-                            default:
-                                logger.warn("elements out of order? [{}]", line);
-                        }
                     }
                 }
 
