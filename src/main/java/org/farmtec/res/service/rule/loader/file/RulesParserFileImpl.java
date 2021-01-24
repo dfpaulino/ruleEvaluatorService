@@ -1,5 +1,6 @@
 package org.farmtec.res.service.rule.loader.file;
 
+import org.farmtec.res.service.rule.loader.RulesParser;
 import org.farmtec.res.service.rule.loader.dto.GroupCompositeDto;
 import org.farmtec.res.service.rule.loader.dto.LeafDto;
 import org.farmtec.res.service.rule.loader.dto.RuleDto;
@@ -18,10 +19,10 @@ import java.util.Map;
 /**
  * Created by dp on 20/01/2021
  */
-public class FileParserImpl implements FileParser {
+public class RulesParserFileImpl implements RulesParser {
 
     private static final Logger logger
-            = LoggerFactory.getLogger(FileParserImpl.class);
+            = LoggerFactory.getLogger(RulesParserFileImpl.class);
 
     private final static String PREDICATE_GROUP_PREFIX = "[P";
     private final static String PREDICATE_TYPE = "type";
@@ -44,7 +45,7 @@ public class FileParserImpl implements FileParser {
     private Map<String, GroupCompositeDto> groupCompositeDtoMap = new HashMap<>();
     private Map<String, RuleDto> ruleDtoMap = new HashMap<>();
 
-    public FileParserImpl(String filePathName) {
+    public RulesParserFileImpl(String filePathName) {
         this.filePathName = filePathName;
     }
 

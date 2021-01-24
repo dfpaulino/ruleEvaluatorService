@@ -1,4 +1,4 @@
-package org.farmtec.res.service.rule.loader.file;
+package org.farmtec.res.service.rule.loader;
 
 import org.farmtec.res.rules.RuleComponent;
 import org.farmtec.res.service.rule.loader.dto.GroupCompositeDto;
@@ -11,7 +11,7 @@ import java.util.Map;
 /**
  * Created by dp on 19/01/2021
  */
-public interface FileParser {
+public interface RulesParser {
 
     boolean loadFile();
 

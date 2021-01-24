@@ -1,11 +1,12 @@
-package org.farmtec.res.service.rule.loader.file;
+package org.farmtec.res.service.rule.loader;
 
+import net.jcip.annotations.GuardedBy;
 import org.farmtec.res.enums.LogicalOperation;
 import org.farmtec.res.enums.Operation;
+import org.farmtec.res.enums.SupportedTypes;
 import org.farmtec.res.rules.RuleComponent;
 import org.farmtec.res.service.builder.utils.RuleBuilderUtil;
 import org.farmtec.res.service.model.Rule;
-import org.farmtec.res.service.rule.loader.RuleLoaderService;
 import org.farmtec.res.service.rule.loader.dto.GroupCompositeDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,29 +17,31 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.*;
 import java.util.stream.Collectors;
-
 /**
  * Created by dp on 19/01/2021
- * Loads rules using a FileParser
+ * Loads rules using a RulesParser
  * The load is async, so check if the rules were properly loaded
  * by {@code is isLoadRuleDone()} and {@code isLoadRuleSuccess()}
  */
-public class RuleLoaderServiceFileImpl implements RuleLoaderService {
+public class RuleLoaderServiceImpl implements RuleLoaderService {
 
     private static final Logger logger
-            = LoggerFactory.getLogger(RuleLoaderServiceFileImpl.class);
+            = LoggerFactory.getLogger(RuleLoaderServiceImpl.class);
 
-    private final FileParser fileParser;
+    private final RulesParser rulesParser;
     private final ExecutorService executor;
 
     volatile private List<Rule> ruleList;
 
+    @GuardedBy("this")
     private Date lastUpdateTime;
+    @GuardedBy("this")
     private boolean isLoadRuleDone = false;
+    @GuardedBy("this")
     private boolean isLoadRuleSuccess = false;
 
-    public RuleLoaderServiceFileImpl(FileParser fileParser) {
-        this.fileParser = fileParser;
+    public RuleLoaderServiceImpl(RulesParser rulesParser) {
+        this.rulesParser = rulesParser;
         executor = Executors.newSingleThreadExecutor();
     }
 
@@ -56,7 +59,7 @@ public class RuleLoaderServiceFileImpl implements RuleLoaderService {
     @Override
     public synchronized void refreshRules() {
         logger.info("refresh task will be submitted");
-        executor.submit(() -> refreshRulesTask());
+        executor.submit(this::refreshRulesTask);
     }
 
     public void refreshRulesTask() {
@@ -68,7 +71,7 @@ public class RuleLoaderServiceFileImpl implements RuleLoaderService {
         logger.info("starting loading rules");
 
         try {
-            if (fileParser.loadFile()) {
+            if (rulesParser.loadFile()) {
                 logger.info("rules ready to be loaded into memory");
                 List<Rule> freshRules = createRules();
                 if (!freshRules.isEmpty()) {
@@ -90,49 +93,34 @@ public class RuleLoaderServiceFileImpl implements RuleLoaderService {
     private List<Rule> createRules() {
 
         //load the base predicates
-        Map<String, RuleComponent> ruleComponentMap = fileParser.getRuleLeafsDto().entrySet().stream()
+        Map<String, RuleComponent> ruleComponentMap = rulesParser.getRuleLeafsDto().entrySet().stream()
                 .collect(Collectors.toMap(
-                        entry -> entry.getKey(),
+                        Map.Entry::getKey,
                         entry -> RuleBuilderUtil.RulePredicateBuilder
                                 .newInstance()
-                                .setType(getTypeFromDto(entry.getValue().getType()))
+                                .setType(SupportedTypes.getSupportedTypeFrom(entry.getValue().getType()))
                                 .setTag(entry.getValue().getTag())
                                 .setOperation(Operation.fromString(entry.getValue().getOperation()))
                                 .setValue(entry.getValue().getValue()).build()
                 ));
 
         //now that we have loaded the base Predicates (leafs of the tree), we can build the rules
-        // a Rule wull have 1 GroupComposite (which will have a tree of other )
+        // a Rule will have 1 GroupComposite (which will have a tree of other )
         //for each rule get the ruleComponent using the {getAndCreateRuleComponent} recusive method
 
         List<Rule> rules = new ArrayList<>();
-        for (String ruleName : fileParser.getRulesDto().keySet()) {
+        for (String ruleName : rulesParser.getRulesDto().keySet()) {
             rules.add(RuleBuilderUtil.RuleBuilder.newInstance()
-                    .setPriority(fileParser.getRulesDto().get(ruleName).getPriority())
+                    .setPriority(rulesParser.getRulesDto().get(ruleName).getPriority())
                     .setName(ruleName)
                     .setActions(new ArrayList<>())
-                    .setRuleComponent(getAndCreateRuleComponent(fileParser.getRulesDto().get(ruleName).getPredicateName(),
+                    .setRuleComponent(getAndCreateRuleComponent(rulesParser.getRulesDto().get(ruleName).getPredicateName(),
                             ruleComponentMap,
-                            fileParser.getGroupCompositesDto()))
+                            rulesParser.getGroupCompositesDto()))
                     .build());
         }
 
         return rules;
-    }
-
-    //TODO this needs to go somewhere else...NOT HERE!!
-    private Class<?> getTypeFromDto(String type) {
-        //default
-        Class<?> t = String.class;
-        switch (type.toLowerCase()) {
-            case "string":
-                t = String.class;
-                break;
-            case "int":
-                t = Integer.class;
-                break;
-        }
-        return t;
     }
 
     /**
@@ -148,6 +136,8 @@ public class RuleLoaderServiceFileImpl implements RuleLoaderService {
                                                     Map<String, RuleComponent> ruleComponentMap, Map<String, GroupCompositeDto> groupCompositeDtoMap) {
         //build the tree
         if (!ruleComponentMap.containsKey(groupName)) {
+            logger.debug("searching for [{}]", groupName);
+
             GroupCompositeDto groupCompositeDto = groupCompositeDtoMap.get(groupName);
 
             List<RuleComponent> ruleComponentsForThisRuleComponent = new ArrayList<>();
@@ -189,3 +179,4 @@ public class RuleLoaderServiceFileImpl implements RuleLoaderService {
         return isLoadRuleSuccess;
     }
 }
+

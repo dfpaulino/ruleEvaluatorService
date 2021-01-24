@@ -1,6 +1,5 @@
 package org.farmtec.res.enums;
 
-import org.farmtec.res.service.rule.loader.file.RuleLoaderServiceFileImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
