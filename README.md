@@ -47,10 +47,25 @@ NOT CONTAINS|||yes | no
 1. DateTime 
 1. Date
 1. Long
+1. BigDecimal
+
+# Rule Configuration
+
+## Load rules from External source
+Rules can be loaded from an external source eg: file, database.
+For this you can use the provided `RuleLoaderService` implementation proper
+`RulesParser` implementation.
+Just implement a `RulesParser`, and inject it into the `RulesLoaderService`
+
+## Load rules from file
+This library supports by default loading rules from a .cfg file.
+Just inject the `RulesParserFileImpl` with a well defined file name
+Configuration samples can be found in src/test/resources/*.cfg
+
+##
 
 
-
-### configure rules
+## Configure rules via code
 1st configure your leafs, AKA predicate.
 For each type there is a predicate factory, that generates the supported operations for the given type
 
