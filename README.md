@@ -57,6 +57,18 @@ For this you can use the provided `RuleLoaderService` implementation proper
 `RulesParser` implementation.
 Just implement a `RulesParser`, and inject it into the `RulesLoaderService`
 
+To test the rule, create a critera in JsonNode, and use the RuleLoaderService 
+to provide the list of configured rules
+``` javascript
+ String criteriaStr = "{\"age\":10,\"name\":\"cano\",\"car\":\"renault\",\"address\":\"Spain\"," +
+                "\"weight\":181,\"surname\":\"Al Capone\"}";
+
+        ObjectMapper mapper = new ObjectMapper();
+        JsonNode criteria = mapper.readTree(criteriaStr);
+        
+List<Rule> applicableRules = ruleLoaderService.getRules().stream().filter(rule -> rule.test(criteria)).collect(Collectors.toList());
+```
+
 ## Load rules from file
 This library supports by default loading rules from a .cfg file.
 Just inject the `RulesParserFileImpl` with a well defined file name
