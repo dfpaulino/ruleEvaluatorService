@@ -25,6 +25,9 @@ public enum SupportedTypes {
             case "integer":
                 t = Integer.class;
                 break;
+            case "long":
+                t = Long.class;
+                break;
 
             default:
                 throw new RuntimeException("Type not supported");

@@ -34,11 +34,32 @@ class RuleBuilderUtilTest {
         String jsonString = "{\"tag1\":\"predicate1\",\"tag2\":\"predicate2\",\"tag3\":10}";
 
         //given
-        PredicateFactory<Integer> integerPredicateFactory = new PredicateGeneratorForInt();
-        PredicateFactory<String> stringPredicateFactory = new PredicateGeneratorForStr();
         RuleComponent ruleComponent = RuleBuilderUtil.RulePredicateBuilder
-                .newInstance(integerPredicateFactory, stringPredicateFactory)
+                .newInstance()
                 .setType(Integer.class)
+                .setTag("tag3")
+                .setOperation(EQ)
+                .setValue(VALUE).build();
+
+        //when
+        ObjectMapper mapper = new ObjectMapper();
+        JsonNode actualObj = mapper.readTree(jsonString);
+        boolean result = ruleComponent.testRule(actualObj);
+
+        //then
+        assertThat(result).isTrue();
+    }
+
+    @Test
+    public void RulePredicateBuilderTest_Long_isTrue() throws Exception {
+
+        String VALUE = String.valueOf(Long.MAX_VALUE);
+        String jsonString = "{\"tag1\":\"predicate1\",\"tag2\":\"predicate2\",\"tag3\":9223372036854775807}";
+
+        //given
+        RuleComponent ruleComponent = RuleBuilderUtil.RulePredicateBuilder
+                .newInstance()
+                .setType(Long.class)
                 .setTag("tag3")
                 .setOperation(EQ)
                 .setValue(VALUE).build();
@@ -62,7 +83,7 @@ class RuleBuilderUtilTest {
         PredicateFactory<Integer> integerPredicateFactory = new PredicateGeneratorForInt();
         PredicateFactory<String> stringPredicateFactory = new PredicateGeneratorForStr();
         RuleComponent ruleComponent = RuleBuilderUtil.RulePredicateBuilder
-                .newInstance(integerPredicateFactory, stringPredicateFactory)
+                .newInstance()
                 .setType(String.class)
                 .setTag("tag1")
                 .setOperation(CONTAINS)
@@ -89,7 +110,7 @@ class RuleBuilderUtilTest {
 
         Assertions.assertThrows(InvalidOperation.class, () -> {
             RuleBuilderUtil.RulePredicateBuilder
-                    .newInstance(integerPredicateFactory, stringPredicateFactory)
+                    .newInstance()
                     .setType(String.class)
                     .setTag("tag1")
                     .setOperation(GT)
@@ -113,7 +134,7 @@ class RuleBuilderUtilTest {
 
         Assertions.assertThrows(InvalidOperation.class, () -> {
             RuleBuilderUtil.RulePredicateBuilder
-                    .newInstance(integerPredicateFactory, stringPredicateFactory)
+                    .newInstance()
                     .setType(Date.class)
                     .setTag("tag1")
                     .setOperation(GT)
@@ -134,7 +155,7 @@ class RuleBuilderUtilTest {
 
         String value1 = "predicate1";
         RuleComponent p1 = RuleBuilderUtil.RulePredicateBuilder
-                .newInstance(integerPredicateFactory, stringPredicateFactory)
+                .newInstance()
                 .setType(String.class)
                 .setTag("tag1")
                 .setOperation(EQ)
@@ -143,7 +164,7 @@ class RuleBuilderUtilTest {
         //tag3 > 5
         String value2 = String.valueOf(5);
         RuleComponent p2 = RuleBuilderUtil.RulePredicateBuilder
-                .newInstance(integerPredicateFactory, stringPredicateFactory)
+                .newInstance()
                 .setType(Integer.class)
                 .setTag("tag3")
                 .setOperation(GT)
@@ -152,7 +173,7 @@ class RuleBuilderUtilTest {
         // tag2 CONTAINS "pred"
         String value3 = "pred";
         RuleComponent p3 = RuleBuilderUtil.RulePredicateBuilder
-                .newInstance(integerPredicateFactory, stringPredicateFactory)
+                .newInstance()
                 .setType(String.class)
                 .setTag("tag1")
                 .setOperation(CONTAINS)
@@ -161,7 +182,7 @@ class RuleBuilderUtilTest {
         // tag4 < 2
         String value4 = String.valueOf(2);
         RuleComponent p4 = RuleBuilderUtil.RulePredicateBuilder
-                .newInstance(integerPredicateFactory, stringPredicateFactory)
+                .newInstance()
                 .setType(Integer.class)
                 .setTag("tag4")
                 .setOperation(LT)
@@ -218,7 +239,7 @@ class RuleBuilderUtilTest {
 
         String value1 = "predicate1";
         RuleComponent p1 = RuleBuilderUtil.RulePredicateBuilder
-                .newInstance(integerPredicateFactory, stringPredicateFactory)
+                .newInstance()
                 .setType(String.class)
                 .setTag("tag1")
                 .setOperation(EQ)
@@ -227,7 +248,7 @@ class RuleBuilderUtilTest {
         //tag3 > 5
         String value2 = String.valueOf(5);
         RuleComponent p2 = RuleBuilderUtil.RulePredicateBuilder
-                .newInstance(integerPredicateFactory, stringPredicateFactory)
+                .newInstance()
                 .setType(Integer.class)
                 .setTag("tag3")
                 .setOperation(GT)
@@ -236,7 +257,7 @@ class RuleBuilderUtilTest {
         // tag2 CONTAINS "pred"
         String value3 = "pred";
         RuleComponent p3 = RuleBuilderUtil.RulePredicateBuilder
-                .newInstance(integerPredicateFactory, stringPredicateFactory)
+                .newInstance()
                 .setType(String.class)
                 .setTag("tag1")
                 .setOperation(CONTAINS)
@@ -245,7 +266,7 @@ class RuleBuilderUtilTest {
         // tag4 < 2
         String value4 = String.valueOf(2);
         RuleComponent p4 = RuleBuilderUtil.RulePredicateBuilder
-                .newInstance(integerPredicateFactory, stringPredicateFactory)
+                .newInstance()
                 .setType(Integer.class)
                 .setTag("tag4")
                 .setOperation(LT)

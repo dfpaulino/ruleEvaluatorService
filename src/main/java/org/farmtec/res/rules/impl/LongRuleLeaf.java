@@ -8,8 +8,7 @@ import org.immutables.value.Value;
 import java.util.function.Predicate;
 
 @Value.Immutable
-public abstract class StringRuleLeaf implements RuleComponent {
-
+public abstract class LongRuleLeaf implements RuleComponent {
     @Value.Parameter
     public abstract String getTag();
 
@@ -17,22 +16,21 @@ public abstract class StringRuleLeaf implements RuleComponent {
     public abstract Operation getOperation();
 
     @Value.Parameter
-    public abstract String getValue();
+    public abstract long getValue();
 
     @Value.Parameter
     public abstract Class<?> getType();
 
     @Value.Parameter
-    public abstract Predicate<String> getPredicate();
+    public abstract Predicate<Long> getPredicate();
 
     @Override
     public boolean testRule(JsonNode jsonNode) {
-
         boolean bool = false;
         if (jsonNode.has(this.getTag())) {
-            bool = this.getPredicate().test(jsonNode.get(this.getTag()).asText());
+            //TODO validate that the value is really integer?...or keep on going?
+            bool = this.getPredicate().test(jsonNode.get(this.getTag()).asLong());
         }
         return bool;
     }
 }
-

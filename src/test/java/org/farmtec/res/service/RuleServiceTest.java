@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import org.farmtec.res.enums.LogicalOperation;
 import org.farmtec.res.predicate.factory.PredicateFactory;
 import org.farmtec.res.predicate.factory.impl.PredicateGeneratorForInt;
+import org.farmtec.res.predicate.factory.impl.PredicateGeneratorForLong;
 import org.farmtec.res.predicate.factory.impl.PredicateGeneratorForStr;
 import org.farmtec.res.rules.RuleComponent;
 import org.farmtec.res.service.builder.utils.RuleBuilderUtil;
@@ -172,11 +173,12 @@ class RuleServiceTest {
         //given
         //tag1 EQ predicate1
         PredicateFactory<Integer> integerPredicateFactory = new PredicateGeneratorForInt();
+        PredicateFactory<Long> longPredicateFactory = new PredicateGeneratorForLong();
         PredicateFactory<String> stringPredicateFactory = new PredicateGeneratorForStr();
 
         String value1 = "predicate1";
         RuleComponent p1 = RuleBuilderUtil.RulePredicateBuilder
-                .newInstance(integerPredicateFactory, stringPredicateFactory)
+                .newInstance(integerPredicateFactory, longPredicateFactory, stringPredicateFactory)
                 .setType(String.class)
                 .setTag("tag1")
                 .setOperation(EQ)
@@ -185,7 +187,7 @@ class RuleServiceTest {
         //tag3 > 5
         String value2 = String.valueOf(5);
         RuleComponent p2 = RuleBuilderUtil.RulePredicateBuilder
-                .newInstance(integerPredicateFactory, stringPredicateFactory)
+                .newInstance(integerPredicateFactory, longPredicateFactory, stringPredicateFactory)
                 .setType(Integer.class)
                 .setTag("tag3")
                 .setOperation(GT)
@@ -194,7 +196,7 @@ class RuleServiceTest {
         // tag2 CONTAINS "pred"
         String value3 = "pred";
         RuleComponent p3 = RuleBuilderUtil.RulePredicateBuilder
-                .newInstance(integerPredicateFactory, stringPredicateFactory)
+                .newInstance(integerPredicateFactory, longPredicateFactory, stringPredicateFactory)
                 .setType(String.class)
                 .setTag("tag2")
                 .setOperation(CONTAINS)
@@ -203,7 +205,7 @@ class RuleServiceTest {
         // tag4 < 2
         String value4 = String.valueOf(2);
         RuleComponent p4 = RuleBuilderUtil.RulePredicateBuilder
-                .newInstance(integerPredicateFactory, stringPredicateFactory)
+                .newInstance(integerPredicateFactory, longPredicateFactory, stringPredicateFactory)
                 .setType(Integer.class)
                 .setTag("tag4")
                 .setOperation(LT)
@@ -233,12 +235,10 @@ class RuleServiceTest {
     private RuleComponent buildRuleGroup2() {
         //given
         //tag5 EQ predicate1
-        PredicateFactory<Integer> integerPredicateFactory = new PredicateGeneratorForInt();
-        PredicateFactory<String> stringPredicateFactory = new PredicateGeneratorForStr();
 
         String value1 = "Hello World";
         RuleComponent p1 = RuleBuilderUtil.RulePredicateBuilder
-                .newInstance(integerPredicateFactory, stringPredicateFactory)
+                .newInstance()
                 .setType(String.class)
                 .setTag("tag5")
                 .setOperation(EQ)
@@ -247,7 +247,7 @@ class RuleServiceTest {
         //tag6 > 0
         String value2 = String.valueOf(0);
         RuleComponent p2 = RuleBuilderUtil.RulePredicateBuilder
-                .newInstance(integerPredicateFactory, stringPredicateFactory)
+                .newInstance()
                 .setType(Integer.class)
                 .setTag("tag6")
                 .setOperation(GT)
@@ -256,7 +256,7 @@ class RuleServiceTest {
         // tag7 CONTAINS "pred"
         String value3 = "sunny";
         RuleComponent p3 = RuleBuilderUtil.RulePredicateBuilder
-                .newInstance(integerPredicateFactory, stringPredicateFactory)
+                .newInstance()
                 .setType(String.class)
                 .setTag("tag7")
                 .setOperation(CONTAINS)
@@ -265,7 +265,7 @@ class RuleServiceTest {
         // tag8 < 2
         String value4 = String.valueOf(25);
         RuleComponent p4 = RuleBuilderUtil.RulePredicateBuilder
-                .newInstance(integerPredicateFactory, stringPredicateFactory)
+                .newInstance()
                 .setType(Integer.class)
                 .setTag("tag8")
                 .setOperation(LT)

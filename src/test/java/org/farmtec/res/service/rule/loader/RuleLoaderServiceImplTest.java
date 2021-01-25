@@ -35,7 +35,7 @@ class RuleLoaderServiceImplTest {
 
     @Test
     void getRules_testPredicate() throws Exception {
-        // Rule ( (number1 EQ 1) || (number2 GT 2 && string1 EQ myString) ) && string2 contains char
+        // Rule ( (number1 EQ Long.Max) || (number2 GT 2 && string1 EQ myString) ) && string2 contains char
         //given
         Map<String, LeafDto> leafDtoMap = new HashMap<>();
         Map<String, GroupCompositeDto> groupCompositeDtoMap;
@@ -61,7 +61,7 @@ class RuleLoaderServiceImplTest {
 
         assertThat(ruleLoaderService.getRules().size()).isEqualTo(1);
 
-        String criteriaStr = "{\"number1\":1,\"number2\":\"1\",\"string1\":\"myString\",\"string2\":\"has a char\"}";
+        String criteriaStr = "{\"number1\":9223372036854775807,\"number2\":\"1\",\"string1\":\"myString\",\"string2\":\"has a char\"}";
 
         ObjectMapper mapper = new ObjectMapper();
         JsonNode criteria1 = mapper.readTree(criteriaStr);
@@ -187,10 +187,10 @@ class RuleLoaderServiceImplTest {
 
     private void setleafDtoMap(Map<String, LeafDto> leafDtoMap) {
         LeafDto leafDto1 = new LeafDto();
-        leafDto1.setType("integer");
+        leafDto1.setType("long");
         leafDto1.setOperation("EQ");
         leafDto1.setTag("number1");
-        leafDto1.setValue("1");
+        leafDto1.setValue(String.valueOf(Long.MAX_VALUE));
 
         LeafDto leafDto2 = new LeafDto();
         leafDto2.setType("integer");
@@ -227,7 +227,8 @@ class RuleLoaderServiceImplTest {
         //         G11
         //  ( G111||   G112 )   && G2
         // ((p1) || (p2 and p3)) && P4
-        //( (number1 EQ 1) || (number2 GT 2 && string1 EQ myString) ) && string2 contains char
+        // 9223372036854775807
+        //( (number1 EQ Long.Max) || (number2 GT 2 && string1 EQ myString) ) && string2 contains char
 
         //G112
         GroupCompositeDto groupCompositeDto112 = new GroupCompositeDto();

@@ -4,9 +4,11 @@ import org.farmtec.res.enums.LogicalOperation;
 import org.farmtec.res.enums.Operation;
 import org.farmtec.res.predicate.factory.PredicateFactory;
 import org.farmtec.res.predicate.factory.impl.PredicateGeneratorForInt;
+import org.farmtec.res.predicate.factory.impl.PredicateGeneratorForLong;
 import org.farmtec.res.predicate.factory.impl.PredicateGeneratorForStr;
 import org.farmtec.res.rules.RuleComponent;
 import org.farmtec.res.rules.impl.ImmutableIntegerRuleLeaf;
+import org.farmtec.res.rules.impl.ImmutableLongRuleLeaf;
 import org.farmtec.res.rules.impl.ImmutableRuleGroupComposite;
 import org.farmtec.res.rules.impl.ImmutableStringRuleLeaf;
 import org.farmtec.res.service.exceptions.InvalidOperation;
@@ -47,7 +49,7 @@ public class RuleBuilderUtil {
         }
 
         /**
-         * @param ruleGroupComposite {@Code RuleComponent} that is composed by other {@code RuleGroupComposite}
+         * @param ruleGroupComposite {@code RuleComponent} that is composed by other {@code RuleGroupComposite}
          * @return {@code RuleBuilder}
          */
         public RuleBuilder setRuleComponent(RuleComponent ruleGroupComposite) {
@@ -125,12 +127,15 @@ public class RuleBuilderUtil {
         private Class<?> type;
         private String value;
         private final PredicateFactory<Integer> integerPredicateFactory;
+        private final PredicateFactory<Long> longPredicateFactory;
         private final PredicateFactory<String> stringPredicateFactory;
 
 
         private RulePredicateBuilder(final PredicateFactory<Integer> integerPredicateFactory,
+                                     final PredicateFactory<Long> longPredicateFactory,
                                      final PredicateFactory<String> stringPredicateFactory) {
             this.integerPredicateFactory = integerPredicateFactory;
+            this.longPredicateFactory = longPredicateFactory;
             this.stringPredicateFactory = stringPredicateFactory;
         }
 
@@ -144,8 +149,9 @@ public class RuleBuilderUtil {
          * @return {@code RuleComponent}
          */
         public static RulePredicateBuilder newInstance(PredicateFactory<Integer> integerPredicateFactory,
+                                                       PredicateFactory<Long> longPredicateFactory,
                                                        PredicateFactory<String> stringPredicateFactory) {
-            return new RulePredicateBuilder(integerPredicateFactory, stringPredicateFactory);
+            return new RulePredicateBuilder(integerPredicateFactory, longPredicateFactory, stringPredicateFactory);
         }
 
         /**
@@ -156,8 +162,10 @@ public class RuleBuilderUtil {
          */
         public static RulePredicateBuilder newInstance() {
             PredicateFactory<Integer> integerPredicateFactory = new PredicateGeneratorForInt();
+            PredicateFactory<Long> longPredicateFactory = new PredicateGeneratorForLong();
             PredicateFactory<String> stringPredicateFactory = new PredicateGeneratorForStr();
-            return new RulePredicateBuilder(integerPredicateFactory, stringPredicateFactory);
+
+            return new RulePredicateBuilder(integerPredicateFactory, longPredicateFactory, stringPredicateFactory);
         }
 
         /**
@@ -216,6 +224,14 @@ public class RuleBuilderUtil {
                     throw new InvalidOperation(error);
                 }
                 ruleComponent = ImmutableIntegerRuleLeaf.of(this.tag, this.operation, valueInt, Integer.class, integerPredicateFactory.getPredicate(this.operation, valueInt));
+            } else if (this.type == Long.class) {
+                Long valueLong = Long.valueOf(this.value);
+                if (null == longPredicateFactory.getPredicate(this.operation, valueLong)) {
+                    String error = String.format("Operation Not supported for tag [%s] operation [%s] value [%s]", this.tag, this.operation.name(), this.value);
+                    throw new InvalidOperation(error);
+                }
+                ruleComponent = ImmutableLongRuleLeaf.of(this.tag, this.operation, valueLong, Integer.class, longPredicateFactory.getPredicate(this.operation, valueLong));
+
             } else if (this.type == String.class) {
                 if (null == stringPredicateFactory.getPredicate(this.operation, this.value)) {
                     String error = String.format("Operation Not supported for tag [%s] operation [%s] value [%s]", this.tag, this.operation.name(), this.value);
