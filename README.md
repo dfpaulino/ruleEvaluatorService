@@ -1,5 +1,5 @@
 
-[![<ORG_NAME>](https://circleci.com/gh/dfpaulino/ruleEvaluatorService/tree/master.svg?style=svg)](https://github.com/dfpaulino/ruleEvaluatorService/tree/master)
+[![CircleCI](https://circleci.com/gh/dfpaulino/ruleEvaluatorService/tree/master.svg?style=svg)](https://github.com/dfpaulino/ruleEvaluatorService/tree/master)
 
 # Rule Evaluator Service
 This is a simple lightweight library to validate rules.
