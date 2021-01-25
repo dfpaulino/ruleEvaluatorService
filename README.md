@@ -43,14 +43,14 @@ NOT CONTAINS|||yes | no
 
 ### Supported Logical Operations (between predicates)
 1. AND
-1. OR
-1. XOR (future)
-
+2. OR
+3. XOR (future)
+4. NOT
 ### future Supported types
 1. DateTime 
-1. Date
-1. Long
-1. BigDecimal
+2. Date
+3. Long
+4. BigDecimal
 
 # Rule Configuration
 

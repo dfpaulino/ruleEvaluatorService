@@ -215,13 +215,13 @@ public class RuleBuilderUtil {
                     String error = String.format("Operation Not supported for tag [%s] operation [%s] value [%s]", this.tag, this.operation.name(), this.value);
                     throw new InvalidOperation(error);
                 }
-                ruleComponent = ImmutableIntegerRuleLeaf.of(this.tag, this.operation, valueInt, Integer.class, integerPredicateFactory);
+                ruleComponent = ImmutableIntegerRuleLeaf.of(this.tag, this.operation, valueInt, Integer.class, integerPredicateFactory.getPredicate(this.operation, valueInt));
             } else if (this.type == String.class) {
                 if (null == stringPredicateFactory.getPredicate(this.operation, this.value)) {
                     String error = String.format("Operation Not supported for tag [%s] operation [%s] value [%s]", this.tag, this.operation.name(), this.value);
                     throw new InvalidOperation(error);
                 }
-                ruleComponent = ImmutableStringRuleLeaf.of(this.tag, this.operation, this.value, String.class, stringPredicateFactory);
+                ruleComponent = ImmutableStringRuleLeaf.of(this.tag, this.operation, this.value, String.class, stringPredicateFactory.getPredicate(this.operation, this.value));
             } else {
                 String error = String.format("Type not Supported Predicate for tag [%s] operation [%s] value [%s]", this.tag, this.operation.name(), this.value);
                 throw new InvalidOperation(error);

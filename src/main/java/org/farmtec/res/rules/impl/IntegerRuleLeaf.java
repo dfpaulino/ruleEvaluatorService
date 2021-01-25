@@ -21,20 +21,14 @@ public abstract class IntegerRuleLeaf implements RuleComponent {
     public abstract Class<?> getType();
 
     @Value.Parameter
-    public abstract PredicateFactory<Integer> getPredicateFactory();
-
-    private transient Predicate<Integer> predicate;
+    public abstract Predicate<Integer> getPredicate();
 
     @Override
     public boolean testRule(JsonNode jsonNode) {
-        // create predicate if not created already. this is lazy load
-        if (predicate == null) {
-            this.predicate = this.getPredicateFactory().getPredicate(this.getOperation(), this.getValue());
-        }
         boolean bool=false;
         if (jsonNode.has(this.getTag())) {
             //TODO validate that the value is really integer?...or keep on going?
-            bool = predicate.test(jsonNode.get(this.getTag()).asInt());
+            bool = this.getPredicate().test(jsonNode.get(this.getTag()).asInt());
         }
         return bool;
     }

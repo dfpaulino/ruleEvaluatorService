@@ -25,20 +25,14 @@ public abstract class StringRuleLeaf implements RuleComponent {
     public abstract Class<?> getType();
 
     @Value.Parameter
-    public abstract PredicateFactory<String> getPredicateFactory();
-
-    private Predicate<String> predicate=null;
+    public abstract Predicate<String> getPredicate();
 
     @Override
     public boolean testRule(JsonNode jsonNode) {
-        // create predicate if not created already. this is lazy load
-        if (predicate == null) {
-            this.predicate = this.getPredicateFactory().getPredicate(this.getOperation(), this.getValue());
-        }
 
         boolean bool = false;
         if (jsonNode.has(this.getTag())) {
-            bool = predicate.test(jsonNode.get(this.getTag()).asText());
+            bool = this.getPredicate().test(jsonNode.get(this.getTag()).asText());
         }
         return bool;
     }

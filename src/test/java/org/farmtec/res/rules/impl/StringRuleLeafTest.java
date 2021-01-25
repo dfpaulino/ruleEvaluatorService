@@ -9,6 +9,9 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+
+import java.util.function.Predicate;
+
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.times;
@@ -20,8 +23,10 @@ class StringRuleLeafTest {
 
     private final static String VALUE = "predicate1";
     private final static String jsonString="{\"tag1\":\"predicate1\",\"tag2\":\"predicate2\",\"tag3\":123}";
+
+
     @Mock
-    PredicateFactory<String> predicateFactoryMock;
+    Predicate<String> predicateStringMock;
 
     @BeforeEach
     void setUp() {
@@ -31,37 +36,29 @@ class StringRuleLeafTest {
     @Test
     void testRule_shouldBeTrueAndInvokeOnce() throws Exception{
         //given
-        Mockito.when(predicateFactoryMock.getPredicate(any(Operation.class), anyString())).thenReturn((x) -> x.equals(VALUE));
-        StringRuleLeaf stringRuleLeaf = ImmutableStringRuleLeaf.of("tag1", Operation.EQ, VALUE, String.class, predicateFactoryMock);
+        Mockito.when(predicateStringMock.test(any(String.class))).thenReturn(true);
+        StringRuleLeaf stringRuleLeaf = ImmutableStringRuleLeaf.of("tag1", Operation.EQ, VALUE, String.class, predicateStringMock);
         ObjectMapper mapper = new ObjectMapper();
         JsonNode actualObj = mapper.readTree(jsonString);
 
         //when
         boolean result = stringRuleLeaf.testRule(actualObj);
         assertThat(result).isTrue();
-        verify(predicateFactoryMock,times(1)).getPredicate(any(Operation.class),anyString());
-
-        //verify that invoking the same leaf, the factory does nto get called again
-        result = stringRuleLeaf.testRule(actualObj);
-        verify(predicateFactoryMock,times(1)).getPredicate(any(Operation.class),anyString());
+        verify(predicateStringMock, times(1)).test(any(String.class));
     }
 
     @Test
     void testRule_UnkownTag_shouldBeFalseAndInvokeOnce() throws Exception{
         //given
-        Mockito.when(predicateFactoryMock.getPredicate(any(Operation.class), anyString())).thenReturn((x) -> x.equals(VALUE));
-        StringRuleLeaf stringRuleLeaf = ImmutableStringRuleLeaf.of("tag", Operation.EQ, VALUE, String.class, predicateFactoryMock);
+        Mockito.when(predicateStringMock.test(any(String.class))).thenReturn(true);
+        StringRuleLeaf stringRuleLeaf = ImmutableStringRuleLeaf.of("tag", Operation.EQ, VALUE, String.class, predicateStringMock);
         ObjectMapper mapper = new ObjectMapper();
         JsonNode actualObj = mapper.readTree(jsonString);
 
         //when
         boolean result = stringRuleLeaf.testRule(actualObj);
         assertThat(result).isFalse();
-        verify(predicateFactoryMock,times(1)).getPredicate(any(Operation.class),anyString());
-
-        //verify that invoking the same leaf, the factory does nto get called again
-        result = stringRuleLeaf.testRule(actualObj);
-        verify(predicateFactoryMock,times(1)).getPredicate(any(Operation.class),anyString());
+        verify(predicateStringMock, times(0)).test(any(String.class));
     }
 
 
