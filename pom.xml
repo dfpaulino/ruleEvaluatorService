@@ -5,7 +5,7 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>org.farmtec.res</groupId>
-  <artifactId>rule-evaluator</artifactId>
+  <artifactId>rule-evaluator-core</artifactId>
     <version>1.0.0-SNAPSHOT</version>
 
   <name>rule-evaluator</name>

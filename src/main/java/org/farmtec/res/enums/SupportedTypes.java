@@ -14,7 +14,7 @@ public enum SupportedTypes {
 
     public static Class<?> getSupportedTypeFrom(String type) {
 
-        Class<?> t = String.class;
+        Class<?> t;
         switch (type.toLowerCase()) {
             case "string":
                 t = String.class;
