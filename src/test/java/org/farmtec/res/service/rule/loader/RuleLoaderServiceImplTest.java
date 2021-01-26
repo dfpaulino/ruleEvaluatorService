@@ -35,7 +35,8 @@ class RuleLoaderServiceImplTest {
 
     @Test
     void getRules_testPredicate() throws Exception {
-        // Rule ( (number1 EQ Long.Max) || (number2 GT 2 && string1 EQ myString) ) && string2 contains char
+        // Rule_1 ( (number1 EQ Long.Max) || (number2 GT 2 && string1 EQ myString) ) && string2 contains char
+        // Rule 2 !(number2 GT 2 && string1 EQ myString)
         //given
         Map<String, LeafDto> leafDtoMap = new HashMap<>();
         Map<String, GroupCompositeDto> groupCompositeDtoMap;
@@ -59,22 +60,55 @@ class RuleLoaderServiceImplTest {
         //wait 3 sec to load the rules...
         Thread.sleep(3000);
 
-        assertThat(ruleLoaderService.getRules().size()).isEqualTo(1);
+        assertThat(ruleLoaderService.getRules().size()).isEqualTo(2);
 
+        //test couple criterias
         String criteriaStr = "{\"number1\":9223372036854775807,\"number2\":\"1\",\"string1\":\"myString\",\"string2\":\"has a char\"}";
 
         ObjectMapper mapper = new ObjectMapper();
         JsonNode criteria1 = mapper.readTree(criteriaStr);
 
-        assertThat(ruleLoaderService.getRules().get(0).test(criteria1)).isTrue();
+        //test each rule
+        for (Rule r : ruleLoaderService.getRules()) {
+            switch (r.getName()) {
+                case "Rule_1":
+                    assertThat(r.test(criteria1)).isTrue();
+                    break;
+                case "Rule_2":
+                    assertThat(r.test(criteria1)).isTrue();
+                    break;
+            }
+        }
 
+        //criteria2
         criteriaStr = "{\"number1\":2,\"number2\":\"3\",\"string1\":\"myString\",\"string2\":\"has a char\"}";
         criteria1 = mapper.readTree(criteriaStr);
-        assertThat(ruleLoaderService.getRules().get(0).test(criteria1)).isTrue();
+        for (Rule r : ruleLoaderService.getRules()) {
+            switch (r.getName()) {
+                case "Rule_1":
+                    assertThat(r.test(criteria1)).isTrue();
+                    break;
+                case "Rule_2":
+                    assertThat(r.test(criteria1)).isFalse();
+                    break;
+            }
+        }
 
+        //criteria3
         criteriaStr = "{\"number1\":2,\"number2\":\"3\",\"string1\":\"myString\",\"string2\":\"has a int\"}";
         criteria1 = mapper.readTree(criteriaStr);
-        assertThat(ruleLoaderService.getRules().get(0).test(criteria1)).isFalse();
+
+        for (Rule r : ruleLoaderService.getRules()) {
+            switch (r.getName()) {
+                case "Rule_1":
+                    assertThat(r.test(criteria1)).isFalse();
+                    break;
+                case "Rule_2":
+                    assertThat(r.test(criteria1)).isFalse();
+                    break;
+            }
+        }
+
     }
 
 
@@ -255,12 +289,19 @@ class RuleLoaderServiceImplTest {
         groupCompositeDto1.setOperation("AND");
         groupCompositeDto1.setPredicateNames(Arrays.asList("G11", "G2"));
 
+        //G3
+        GroupCompositeDto groupCompositeDto3 = new GroupCompositeDto();
+        groupCompositeDto3.setOperation("NOT");
+        groupCompositeDto3.setPredicateNames(Arrays.asList("G112"));
+
         Map<String, GroupCompositeDto> groupCompositeDtoMap = new HashMap<>();
         groupCompositeDtoMap.put("G112", groupCompositeDto112);
         groupCompositeDtoMap.put("G111", groupCompositeDto111);
         groupCompositeDtoMap.put("G11", groupCompositeDto11);
         groupCompositeDtoMap.put("G2", groupCompositeDto2);
         groupCompositeDtoMap.put("G1", groupCompositeDto1);
+        groupCompositeDtoMap.put("G3", groupCompositeDto3);
+
 
         return groupCompositeDtoMap;
     }
@@ -271,8 +312,14 @@ class RuleLoaderServiceImplTest {
         ruleDto.setActions(new ArrayList<>());
         ruleDto.setPriority(1);
 
+        RuleDto ruleDto2 = new RuleDto();
+        ruleDto2.setPredicateName("G3");
+        ruleDto2.setActions(new ArrayList<>());
+        ruleDto2.setPriority(1);
+
         Map<String, RuleDto> ruleDtoMap = new HashMap<>();
         ruleDtoMap.put("Rule_1", ruleDto);
+        ruleDtoMap.put("Rule_2", ruleDto2);
         return ruleDtoMap;
     }
 }

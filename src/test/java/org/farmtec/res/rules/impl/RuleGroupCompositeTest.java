@@ -129,6 +129,23 @@ class RuleGroupCompositeTest {
         verify(ruleComponentMock3, times(1)).testRule(any(JsonNode.class));
     }
 
+    @Test
+    void testRule_ruleNOT_shouldBeTrue() throws Exception {
+        //given
+        Mockito.when(ruleComponentMock1.testRule(any(JsonNode.class))).thenReturn(false);
+        List<RuleComponent> ruleComponentList = Arrays.asList(ruleComponentMock1);
+        RuleComponent ruleComponent = ImmutableRuleGroupComposite.of(ruleComponentList, LogicalOperation.NOT);
+        ObjectMapper mapper = new ObjectMapper();
+        JsonNode actualObj = mapper.readTree(jsonString);
+
+        //when
+        assertThat(ruleComponent.testRule(actualObj)).isTrue();
+        verify(ruleComponentMock1, times(1)).testRule(any(JsonNode.class));
+    }
+
+
+
+
     /*
      upto here, we only tested simple group's, ie, groups composed by leafs
     now we need to test groups composed by other group that are composed by leafs
@@ -183,6 +200,36 @@ class RuleGroupCompositeTest {
         //Parent Group1, composed by chileGroup1 and childGroup2
         List<RuleComponent> ruleComponentList3 = Arrays.asList(group11, group12);
         RuleComponent group1 = ImmutableRuleGroupComposite.of(ruleComponentList3, LogicalOperation.AND);
+
+
+        ObjectMapper mapper = new ObjectMapper();
+        JsonNode actualObj = mapper.readTree(jsonString);
+
+        //when
+        assertThat(group1.testRule(actualObj)).isFalse();
+    }
+
+    @Test
+    void testRule_groupOfGroupOfRules_NOT_shouldBeFalse() throws Exception {
+        //given
+        Mockito.when(ruleComponentMock1.testRule(any(JsonNode.class))).thenReturn(true);
+        Mockito.when(ruleComponentMock2.testRule(any(JsonNode.class))).thenReturn(true);
+        Mockito.when(ruleComponentMock3.testRule(any(JsonNode.class))).thenReturn(false);
+        Mockito.when(ruleComponentMock4.testRule(any(JsonNode.class))).thenReturn(true);
+        //leafs of childGroup1 of parent group1
+        List<RuleComponent> ruleComponentList1 = Arrays.asList(ruleComponentMock1, ruleComponentMock2);
+        RuleComponent group111 = ImmutableRuleGroupComposite.of(ruleComponentList1, LogicalOperation.AND);
+        //leafs of childGroup2 of parent group1
+        List<RuleComponent> ruleComponentList2 = Arrays.asList(ruleComponentMock3, ruleComponentMock4);
+        RuleComponent group112 = ImmutableRuleGroupComposite.of(ruleComponentList2, LogicalOperation.OR);
+
+        //Parent Group1, composed by chileGroup1 and childGroup2
+        List<RuleComponent> ruleComponentList3 = Arrays.asList(group111, group112);
+        RuleComponent group11 = ImmutableRuleGroupComposite.of(ruleComponentList3, LogicalOperation.AND);
+
+        //
+        List<RuleComponent> ruleComponentList4 = Arrays.asList(group11);
+        RuleComponent group1 = ImmutableRuleGroupComposite.of(ruleComponentList4, LogicalOperation.NOT);
 
 
         ObjectMapper mapper = new ObjectMapper();

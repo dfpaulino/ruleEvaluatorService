@@ -12,8 +12,14 @@ public enum LogicalOperation {
     },
     OR {
         @Override
-        public boolean test (boolean a,boolean b) {
+        public boolean test (boolean a, boolean b) {
             return a||b;
+        }
+    },
+    NOT {
+        @Override
+        public boolean test(boolean a, boolean b) {
+            return !a;
         }
     };
 
@@ -30,6 +36,9 @@ public enum LogicalOperation {
                 break;
             case "OR":
                 logicalOperation = LogicalOperation.OR;
+                break;
+            case "NOT":
+                logicalOperation = LogicalOperation.NOT;
                 break;
         }
         if (logicalOperation == null) {
