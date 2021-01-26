@@ -37,6 +37,8 @@ class RuleLoaderServiceImplTest {
     void getRules_testPredicate() throws Exception {
         // Rule_1 ( (number1 EQ Long.Max) || (number2 GT 2 && string1 EQ myString) ) && string2 contains char
         // Rule 2 !(number2 GT 2 && string1 EQ myString)
+        // Rule_3  (myTime>21:00:00  && myTime>22:00:00)
+
         //given
         Map<String, LeafDto> leafDtoMap = new HashMap<>();
         Map<String, GroupCompositeDto> groupCompositeDtoMap;
@@ -60,7 +62,7 @@ class RuleLoaderServiceImplTest {
         //wait 3 sec to load the rules...
         Thread.sleep(3000);
 
-        assertThat(ruleLoaderService.getRules().size()).isEqualTo(2);
+        assertThat(ruleLoaderService.getRules().size()).isEqualTo(3);
 
         //test couple criterias
         String criteriaStr = "{\"number1\":9223372036854775807,\"number2\":\"1\",\"string1\":\"myString\",\"string2\":\"has a char\"}";
@@ -77,11 +79,14 @@ class RuleLoaderServiceImplTest {
                 case "Rule_2":
                     assertThat(r.test(criteria1)).isTrue();
                     break;
+                case "Rule_3":
+                    assertThat(r.test(criteria1)).isFalse();
+                    break;
             }
         }
 
         //criteria2
-        criteriaStr = "{\"number1\":2,\"number2\":\"3\",\"string1\":\"myString\",\"string2\":\"has a char\"}";
+        criteriaStr = "{\"number1\":2,\"number2\":\"3\",\"string1\":\"myString\",\"string2\":\"has a char\",\"myTime\":\"22:30:00\"}";
         criteria1 = mapper.readTree(criteriaStr);
         for (Rule r : ruleLoaderService.getRules()) {
             switch (r.getName()) {
@@ -91,11 +96,14 @@ class RuleLoaderServiceImplTest {
                 case "Rule_2":
                     assertThat(r.test(criteria1)).isFalse();
                     break;
+                case "Rule_3":
+                    assertThat(r.test(criteria1)).isFalse();
+                    break;
             }
         }
 
         //criteria3
-        criteriaStr = "{\"number1\":2,\"number2\":\"3\",\"string1\":\"myString\",\"string2\":\"has a int\"}";
+        criteriaStr = "{\"number1\":2,\"number2\":\"3\",\"string1\":\"myString\",\"string2\":\"has a int\",\"myTime\":\"21:30:00\"}";
         criteria1 = mapper.readTree(criteriaStr);
 
         for (Rule r : ruleLoaderService.getRules()) {
@@ -105,6 +113,9 @@ class RuleLoaderServiceImplTest {
                     break;
                 case "Rule_2":
                     assertThat(r.test(criteria1)).isFalse();
+                    break;
+                case "Rule_3":
+                    assertThat(r.test(criteria1)).isTrue();
                     break;
             }
         }
@@ -244,10 +255,24 @@ class RuleLoaderServiceImplTest {
         leafDto4.setTag("string2");
         leafDto4.setValue("char");
 
+        LeafDto leafDto5 = new LeafDto();
+        leafDto5.setType("time");
+        leafDto5.setOperation("GT");
+        leafDto5.setTag("myTime");
+        leafDto5.setValue("21:00:00");
+
+        LeafDto leafDto6 = new LeafDto();
+        leafDto6.setType("time");
+        leafDto6.setOperation("LT");
+        leafDto6.setTag("myTime");
+        leafDto6.setValue("22:00:00");
+
         leafDtoMap.put("P1", leafDto1);
         leafDtoMap.put("P2", leafDto2);
         leafDtoMap.put("P3", leafDto3);
         leafDtoMap.put("P4", leafDto4);
+        leafDtoMap.put("P5", leafDto5);
+        leafDtoMap.put("P6", leafDto6);
 
     }
 
@@ -284,6 +309,7 @@ class RuleLoaderServiceImplTest {
         groupCompositeDto11.setOperation("OR");
         groupCompositeDto11.setPredicateNames(Arrays.asList("G111", "G112"));
 
+
         //G1
         GroupCompositeDto groupCompositeDto1 = new GroupCompositeDto();
         groupCompositeDto1.setOperation("AND");
@@ -294,6 +320,12 @@ class RuleLoaderServiceImplTest {
         groupCompositeDto3.setOperation("NOT");
         groupCompositeDto3.setPredicateNames(Arrays.asList("G112"));
 
+        //G4
+        GroupCompositeDto groupCompositeDto4 = new GroupCompositeDto();
+        groupCompositeDto4.setOperation("AND");
+        groupCompositeDto4.setPredicateNames(Arrays.asList("P5", "P6"));
+
+
         Map<String, GroupCompositeDto> groupCompositeDtoMap = new HashMap<>();
         groupCompositeDtoMap.put("G112", groupCompositeDto112);
         groupCompositeDtoMap.put("G111", groupCompositeDto111);
@@ -301,6 +333,7 @@ class RuleLoaderServiceImplTest {
         groupCompositeDtoMap.put("G2", groupCompositeDto2);
         groupCompositeDtoMap.put("G1", groupCompositeDto1);
         groupCompositeDtoMap.put("G3", groupCompositeDto3);
+        groupCompositeDtoMap.put("G4", groupCompositeDto4);
 
 
         return groupCompositeDtoMap;
@@ -317,9 +350,16 @@ class RuleLoaderServiceImplTest {
         ruleDto2.setActions(new ArrayList<>());
         ruleDto2.setPriority(1);
 
+        RuleDto ruleDto3 = new RuleDto();
+        ruleDto3.setPredicateName("G4");
+        ruleDto3.setActions(new ArrayList<>());
+        ruleDto3.setPriority(1);
+
         Map<String, RuleDto> ruleDtoMap = new HashMap<>();
         ruleDtoMap.put("Rule_1", ruleDto);
         ruleDtoMap.put("Rule_2", ruleDto2);
+        ruleDtoMap.put("Rule_3", ruleDto3);
+
         return ruleDtoMap;
     }
 }

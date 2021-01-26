@@ -1,5 +1,7 @@
 package org.farmtec.res.enums;
 
+import java.time.LocalTime;
+
 /**
  * Created by dp on 24/01/2021
  */
@@ -27,6 +29,9 @@ public enum SupportedTypes {
                 break;
             case "long":
                 t = Long.class;
+                break;
+            case "time":
+                t = LocalTime.class;
                 break;
 
             default:

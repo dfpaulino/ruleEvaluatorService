@@ -27,4 +27,10 @@ class LogicalOperationTest {
         assertThat(LogicalOperation.OR.test(false,false)).isFalse();
     }
 
+    @Test
+    public void logicalOperation_NOT() {
+        assertThat(LogicalOperation.NOT.test(false, true)).isTrue();
+        assertThat(LogicalOperation.NOT.test(true, true)).isFalse();
+    }
+
 }

@@ -8,6 +8,7 @@ import org.farmtec.res.predicate.factory.PredicateFactory;
 import org.farmtec.res.predicate.factory.impl.PredicateGeneratorForInt;
 import org.farmtec.res.predicate.factory.impl.PredicateGeneratorForLong;
 import org.farmtec.res.predicate.factory.impl.PredicateGeneratorForStr;
+import org.farmtec.res.predicate.factory.impl.PredicateGeneratorForTime;
 import org.farmtec.res.rules.RuleComponent;
 import org.farmtec.res.service.builder.utils.RuleBuilderUtil;
 import org.farmtec.res.service.model.ImmutableRule;
@@ -20,6 +21,7 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 import java.io.File;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -175,10 +177,12 @@ class RuleServiceTest {
         PredicateFactory<Integer> integerPredicateFactory = new PredicateGeneratorForInt();
         PredicateFactory<Long> longPredicateFactory = new PredicateGeneratorForLong();
         PredicateFactory<String> stringPredicateFactory = new PredicateGeneratorForStr();
+        PredicateFactory<LocalTime> localTimePredicateFactory = new PredicateGeneratorForTime();
 
         String value1 = "predicate1";
         RuleComponent p1 = RuleBuilderUtil.RulePredicateBuilder
-                .newInstance(integerPredicateFactory, longPredicateFactory, stringPredicateFactory)
+                .newInstance(integerPredicateFactory, longPredicateFactory, stringPredicateFactory,
+                        localTimePredicateFactory)
                 .setType(String.class)
                 .setTag("tag1")
                 .setOperation(EQ)
@@ -187,7 +191,8 @@ class RuleServiceTest {
         //tag3 > 5
         String value2 = String.valueOf(5);
         RuleComponent p2 = RuleBuilderUtil.RulePredicateBuilder
-                .newInstance(integerPredicateFactory, longPredicateFactory, stringPredicateFactory)
+                .newInstance(integerPredicateFactory, longPredicateFactory, stringPredicateFactory,
+                        localTimePredicateFactory)
                 .setType(Integer.class)
                 .setTag("tag3")
                 .setOperation(GT)
@@ -196,7 +201,8 @@ class RuleServiceTest {
         // tag2 CONTAINS "pred"
         String value3 = "pred";
         RuleComponent p3 = RuleBuilderUtil.RulePredicateBuilder
-                .newInstance(integerPredicateFactory, longPredicateFactory, stringPredicateFactory)
+                .newInstance(integerPredicateFactory, longPredicateFactory, stringPredicateFactory,
+                        localTimePredicateFactory)
                 .setType(String.class)
                 .setTag("tag2")
                 .setOperation(CONTAINS)
@@ -205,7 +211,8 @@ class RuleServiceTest {
         // tag4 < 2
         String value4 = String.valueOf(2);
         RuleComponent p4 = RuleBuilderUtil.RulePredicateBuilder
-                .newInstance(integerPredicateFactory, longPredicateFactory, stringPredicateFactory)
+                .newInstance(integerPredicateFactory, longPredicateFactory, stringPredicateFactory,
+                        localTimePredicateFactory)
                 .setType(Integer.class)
                 .setTag("tag4")
                 .setOperation(LT)

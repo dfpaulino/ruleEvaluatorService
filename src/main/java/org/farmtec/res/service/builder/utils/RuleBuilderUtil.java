@@ -6,15 +6,15 @@ import org.farmtec.res.predicate.factory.PredicateFactory;
 import org.farmtec.res.predicate.factory.impl.PredicateGeneratorForInt;
 import org.farmtec.res.predicate.factory.impl.PredicateGeneratorForLong;
 import org.farmtec.res.predicate.factory.impl.PredicateGeneratorForStr;
+import org.farmtec.res.predicate.factory.impl.PredicateGeneratorForTime;
 import org.farmtec.res.rules.RuleComponent;
-import org.farmtec.res.rules.impl.ImmutableIntegerRuleLeaf;
-import org.farmtec.res.rules.impl.ImmutableLongRuleLeaf;
-import org.farmtec.res.rules.impl.ImmutableRuleGroupComposite;
-import org.farmtec.res.rules.impl.ImmutableStringRuleLeaf;
+import org.farmtec.res.rules.impl.*;
 import org.farmtec.res.service.exceptions.InvalidOperation;
 import org.farmtec.res.service.model.Action;
 import org.farmtec.res.service.model.ImmutableRule;
 import org.farmtec.res.service.model.Rule;
+
+import java.time.LocalTime;
 import java.util.List;
 
 
@@ -129,14 +129,17 @@ public class RuleBuilderUtil {
         private final PredicateFactory<Integer> integerPredicateFactory;
         private final PredicateFactory<Long> longPredicateFactory;
         private final PredicateFactory<String> stringPredicateFactory;
+        private final PredicateFactory<LocalTime> localTimePredicateFactory;
 
 
         private RulePredicateBuilder(final PredicateFactory<Integer> integerPredicateFactory,
                                      final PredicateFactory<Long> longPredicateFactory,
-                                     final PredicateFactory<String> stringPredicateFactory) {
+                                     final PredicateFactory<String> stringPredicateFactory,
+                                     final PredicateFactory<LocalTime> localTimePredicateFactory) {
             this.integerPredicateFactory = integerPredicateFactory;
             this.longPredicateFactory = longPredicateFactory;
             this.stringPredicateFactory = stringPredicateFactory;
+            this.localTimePredicateFactory = localTimePredicateFactory;
         }
 
 
@@ -150,8 +153,10 @@ public class RuleBuilderUtil {
          */
         public static RulePredicateBuilder newInstance(PredicateFactory<Integer> integerPredicateFactory,
                                                        PredicateFactory<Long> longPredicateFactory,
-                                                       PredicateFactory<String> stringPredicateFactory) {
-            return new RulePredicateBuilder(integerPredicateFactory, longPredicateFactory, stringPredicateFactory);
+                                                       PredicateFactory<String> stringPredicateFactory,
+                                                       PredicateFactory<LocalTime> localTimePredicateFactory) {
+            return new RulePredicateBuilder(integerPredicateFactory, longPredicateFactory, stringPredicateFactory,
+                    localTimePredicateFactory);
         }
 
         /**
@@ -164,8 +169,10 @@ public class RuleBuilderUtil {
             PredicateFactory<Integer> integerPredicateFactory = new PredicateGeneratorForInt();
             PredicateFactory<Long> longPredicateFactory = new PredicateGeneratorForLong();
             PredicateFactory<String> stringPredicateFactory = new PredicateGeneratorForStr();
+            PredicateFactory<LocalTime> localTimePredicateFactory = new PredicateGeneratorForTime();
 
-            return new RulePredicateBuilder(integerPredicateFactory, longPredicateFactory, stringPredicateFactory);
+            return new RulePredicateBuilder(integerPredicateFactory, longPredicateFactory, stringPredicateFactory,
+                    localTimePredicateFactory);
         }
 
         /**
@@ -238,6 +245,13 @@ public class RuleBuilderUtil {
                     throw new InvalidOperation(error);
                 }
                 ruleComponent = ImmutableStringRuleLeaf.of(this.tag, this.operation, this.value, String.class, stringPredicateFactory.getPredicate(this.operation, this.value));
+            } else if (this.type == LocalTime.class) {
+                LocalTime lt = LocalTime.parse(this.value);
+                if (null == localTimePredicateFactory.getPredicate(this.operation, lt)) {
+                    String error = String.format("Operation Not supported for tag [%s] operation [%s] value [%s]", this.tag, this.operation.name(), this.value);
+                    throw new InvalidOperation(error);
+                }
+                ruleComponent = ImmutableTimeRuleLeaf.of(this.tag, this.operation, this.value, LocalTime.class, localTimePredicateFactory.getPredicate(this.operation, lt));
             } else {
                 String error = String.format("Type not Supported Predicate for tag [%s] operation [%s] value [%s]", this.tag, this.operation.name(), this.value);
                 throw new InvalidOperation(error);

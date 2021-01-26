@@ -28,8 +28,10 @@ Note that the A>1 and B="string" and so on are simple predicates, ie, leafs
 ### Supported types/Operations for predicates
 1. Integers (EQ,NEQ,GT,LT,GTE,LTE)
 1. Strings (EQ,NEQ,CONTAINS,NOT CONTAINS)
+1. Long (EQ,NEQ,GT,LT,GTE,LTE)
+1. LocalTime (EQ,NEQ,GT,LT,GTE,LTE)
 
-Operation Enum|logical equivalent |String|Int
+Operation Enum|logical equivalent |String|Int/Long/LocalTime
 --------------|-------------------|------|---
 EQ | ==|yes | yes
 NEQ | != |yes | yes

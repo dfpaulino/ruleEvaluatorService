@@ -7,7 +7,12 @@ import org.farmtec.res.enums.LogicalOperation;
 import org.farmtec.res.predicate.factory.PredicateFactory;
 import org.farmtec.res.predicate.factory.impl.PredicateGeneratorForInt;
 import org.farmtec.res.predicate.factory.impl.PredicateGeneratorForStr;
+import org.farmtec.res.predicate.factory.impl.PredicateGeneratorForTime;
 import org.farmtec.res.rules.RuleComponent;
+import org.farmtec.res.rules.impl.ImmutableIntegerRuleLeaf;
+import org.farmtec.res.rules.impl.ImmutableLongRuleLeaf;
+import org.farmtec.res.rules.impl.ImmutableStringRuleLeaf;
+import org.farmtec.res.rules.impl.ImmutableTimeRuleLeaf;
 import org.farmtec.res.service.builder.utils.RuleBuilderUtil;
 import org.farmtec.res.service.exceptions.InvalidOperation;
 import org.farmtec.res.service.model.Action;
@@ -16,6 +21,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -47,6 +53,7 @@ class RuleBuilderUtilTest {
         boolean result = ruleComponent.testRule(actualObj);
 
         //then
+        assertThat(ruleComponent).isInstanceOf(ImmutableIntegerRuleLeaf.class);
         assertThat(result).isTrue();
     }
 
@@ -70,6 +77,7 @@ class RuleBuilderUtilTest {
         boolean result = ruleComponent.testRule(actualObj);
 
         //then
+        assertThat(ruleComponent).isInstanceOf(ImmutableLongRuleLeaf.class);
         assertThat(result).isTrue();
     }
 
@@ -80,8 +88,6 @@ class RuleBuilderUtilTest {
         String jsonString = "{\"tag1\":\"predicate1\",\"tag2\":\"predicate2\",\"tag3\":10}";
 
         //given
-        PredicateFactory<Integer> integerPredicateFactory = new PredicateGeneratorForInt();
-        PredicateFactory<String> stringPredicateFactory = new PredicateGeneratorForStr();
         RuleComponent ruleComponent = RuleBuilderUtil.RulePredicateBuilder
                 .newInstance()
                 .setType(String.class)
@@ -95,6 +101,31 @@ class RuleBuilderUtilTest {
         boolean result = ruleComponent.testRule(actualObj);
 
         //then
+        assertThat(ruleComponent).isInstanceOf(ImmutableStringRuleLeaf.class);
+        assertThat(result).isTrue();
+    }
+
+    @Test
+    public void RulePredicateBuilderTest_Time_isTrue() throws Exception {
+
+        String VALUE = "21:00:00";
+        String jsonString = "{\"tag1\":\"21:00:00\",\"tag2\":\"predicate2\",\"tag3\":10}";
+
+        //given
+        RuleComponent ruleComponent = RuleBuilderUtil.RulePredicateBuilder
+                .newInstance()
+                .setType(LocalTime.class)
+                .setTag("tag1")
+                .setOperation(GTE)
+                .setValue(VALUE).build();
+
+        //when
+        ObjectMapper mapper = new ObjectMapper();
+        JsonNode actualObj = mapper.readTree(jsonString);
+        boolean result = ruleComponent.testRule(actualObj);
+
+        //then
+        assertThat(ruleComponent).isInstanceOf(ImmutableTimeRuleLeaf.class);
         assertThat(result).isTrue();
     }
 
