@@ -181,8 +181,7 @@ class RuleServiceTest {
 
         String value1 = "predicate1";
         RuleComponent p1 = RuleBuilderUtil.RulePredicateBuilder
-                .newInstance(integerPredicateGenerator, longPredicateGenerator, stringPredicateGenerator,
-                        localTimePredicateGenerator)
+                .newInstance()
                 .setType(String.class)
                 .setTag("tag1")
                 .setOperation(EQ)
@@ -191,8 +190,7 @@ class RuleServiceTest {
         //tag3 > 5
         String value2 = String.valueOf(5);
         RuleComponent p2 = RuleBuilderUtil.RulePredicateBuilder
-                .newInstance(integerPredicateGenerator, longPredicateGenerator, stringPredicateGenerator,
-                        localTimePredicateGenerator)
+                .newInstance()
                 .setType(Integer.class)
                 .setTag("tag3")
                 .setOperation(GT)
@@ -201,8 +199,7 @@ class RuleServiceTest {
         // tag2 CONTAINS "pred"
         String value3 = "pred";
         RuleComponent p3 = RuleBuilderUtil.RulePredicateBuilder
-                .newInstance(integerPredicateGenerator, longPredicateGenerator, stringPredicateGenerator,
-                        localTimePredicateGenerator)
+                .newInstance()
                 .setType(String.class)
                 .setTag("tag2")
                 .setOperation(CONTAINS)
@@ -211,8 +208,7 @@ class RuleServiceTest {
         // tag4 < 2
         String value4 = String.valueOf(2);
         RuleComponent p4 = RuleBuilderUtil.RulePredicateBuilder
-                .newInstance(integerPredicateGenerator, longPredicateGenerator, stringPredicateGenerator,
-                        localTimePredicateGenerator)
+                .newInstance()
                 .setType(Integer.class)
                 .setTag("tag4")
                 .setOperation(LT)

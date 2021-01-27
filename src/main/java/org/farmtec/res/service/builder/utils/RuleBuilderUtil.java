@@ -3,10 +3,8 @@ package org.farmtec.res.service.builder.utils;
 import org.farmtec.res.enums.LogicalOperation;
 import org.farmtec.res.enums.Operation;
 import org.farmtec.res.predicate.factory.PredicateGenerator;
-import org.farmtec.res.predicate.factory.impl.PredicateGeneratorForInt;
-import org.farmtec.res.predicate.factory.impl.PredicateGeneratorForLong;
-import org.farmtec.res.predicate.factory.impl.PredicateGeneratorForStr;
-import org.farmtec.res.predicate.factory.impl.PredicateGeneratorForTime;
+import org.farmtec.res.predicate.factory.PredicateGeneratorFactory;
+import org.farmtec.res.predicate.factory.impl.*;
 import org.farmtec.res.rules.RuleComponent;
 import org.farmtec.res.rules.impl.*;
 import org.farmtec.res.service.exceptions.InvalidOperation;
@@ -122,6 +120,8 @@ public class RuleBuilderUtil {
      * This will create predicate based on the {@code PredicateGenerator} injected
      */
     public static class RulePredicateBuilder {
+        public static PredicateGeneratorFactory DEFAULT_PREDIATE_GENERATOR_FACTORY = new PredicateGeneratorFactoryImpl();
+
         private Operation operation;
         private String tag;
         private Class<?> type;
@@ -132,14 +132,12 @@ public class RuleBuilderUtil {
         private final PredicateGenerator<LocalTime> localTimePredicateGenerator;
 
 
-        private RulePredicateBuilder(final PredicateGenerator<Integer> integerPredicateGenerator,
-                                     final PredicateGenerator<Long> longPredicateGenerator,
-                                     final PredicateGenerator<String> stringPredicateGenerator,
-                                     final PredicateGenerator<LocalTime> localTimePredicateGenerator) {
-            this.integerPredicateGenerator = integerPredicateGenerator;
-            this.longPredicateGenerator = longPredicateGenerator;
-            this.stringPredicateGenerator = stringPredicateGenerator;
-            this.localTimePredicateGenerator = localTimePredicateGenerator;
+        private RulePredicateBuilder(final PredicateGeneratorFactory predicateGeneratorFactory) {
+
+            this.integerPredicateGenerator = predicateGeneratorFactory.getIntPredicateGenerator();
+            this.longPredicateGenerator = predicateGeneratorFactory.getLongPredicateGenerator();
+            this.stringPredicateGenerator = predicateGeneratorFactory.getStringPredicateGenerator();
+            this.localTimePredicateGenerator = predicateGeneratorFactory.getTimePredicateGenerator();
         }
 
 
@@ -147,16 +145,11 @@ public class RuleBuilderUtil {
          * RulePredicateBuilder allows to create a base rule {@code RuleComponent}
          * Its required to inject {@code PredicateGenerator} for each type
          *
-         * @param integerPredicateGenerator of type {@code PredicateGenerator<Integer>}
-         * @param stringPredicateGenerator  of type {@code PredicateGenerator<String>}
+         * @param predicateGeneratorFactory of type {@link PredicateGeneratorFactory}
          * @return {@code RuleComponent}
          */
-        public static RulePredicateBuilder newInstance(PredicateGenerator<Integer> integerPredicateGenerator,
-                                                       PredicateGenerator<Long> longPredicateGenerator,
-                                                       PredicateGenerator<String> stringPredicateGenerator,
-                                                       PredicateGenerator<LocalTime> localTimePredicateGenerator) {
-            return new RulePredicateBuilder(integerPredicateGenerator, longPredicateGenerator, stringPredicateGenerator,
-                    localTimePredicateGenerator);
+        public static RulePredicateBuilder newInstance(PredicateGeneratorFactory predicateGeneratorFactory) {
+            return new RulePredicateBuilder(predicateGeneratorFactory);
         }
 
         /**
@@ -166,13 +159,7 @@ public class RuleBuilderUtil {
          * @return {@code RuleComponent}
          */
         public static RulePredicateBuilder newInstance() {
-            PredicateGenerator<Integer> integerPredicateGenerator = new PredicateGeneratorForInt();
-            PredicateGenerator<Long> longPredicateGenerator = new PredicateGeneratorForLong();
-            PredicateGenerator<String> stringPredicateGenerator = new PredicateGeneratorForStr();
-            PredicateGenerator<LocalTime> localTimePredicateGenerator = new PredicateGeneratorForTime();
-
-            return new RulePredicateBuilder(integerPredicateGenerator, longPredicateGenerator, stringPredicateGenerator,
-                    localTimePredicateGenerator);
+            return new RulePredicateBuilder(DEFAULT_PREDIATE_GENERATOR_FACTORY);
         }
 
         /**
