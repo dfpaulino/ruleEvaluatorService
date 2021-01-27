@@ -11,13 +11,13 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class PredicateGeneratorForStrTest {
 
-    PredicateFactory<String> predicateFactory = new PredicateGeneratorForStr();
+    PredicateGenerator<String> predicateGenerator = new PredicateGeneratorForStr();
 
     @Test
     void getPredicate_equals() {
     //given
         //given
-        Predicate<String> predicate = predicateFactory.getPredicate(Operation.EQ, "String");
+        Predicate<String> predicate = predicateGenerator.getPredicate(Operation.EQ, "String");
 
         assertAll(() -> assertThat(predicate.test("String")).isTrue(),
                 () -> assertThat(predicate.test("someting Else")).isFalse(),
@@ -29,7 +29,7 @@ class PredicateGeneratorForStrTest {
     void getPredicate_notEquals() {
         //given
         //given
-        Predicate<String> predicate = predicateFactory.getPredicate(Operation.NEQ, "String");
+        Predicate<String> predicate = predicateGenerator.getPredicate(Operation.NEQ, "String");
 
         assertAll(() -> assertThat(predicate.test("String")).isFalse(),
                 () -> assertThat(predicate.test("someting Else")).isTrue(),
@@ -42,7 +42,7 @@ class PredicateGeneratorForStrTest {
         //given
         //given
         //when
-        Predicate<String> predicate = predicateFactory.getPredicate(Operation.CONTAINS, "ing");
+        Predicate<String> predicate = predicateGenerator.getPredicate(Operation.CONTAINS, "ing");
 
         //then
         assertAll(() -> assertThat(predicate.test("String")).isTrue(),

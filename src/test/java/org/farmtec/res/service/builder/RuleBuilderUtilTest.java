@@ -4,10 +4,9 @@ package org.farmtec.res.service.builder;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.farmtec.res.enums.LogicalOperation;
-import org.farmtec.res.predicate.factory.PredicateFactory;
+import org.farmtec.res.predicate.factory.PredicateGenerator;
 import org.farmtec.res.predicate.factory.impl.PredicateGeneratorForInt;
 import org.farmtec.res.predicate.factory.impl.PredicateGeneratorForStr;
-import org.farmtec.res.predicate.factory.impl.PredicateGeneratorForTime;
 import org.farmtec.res.rules.RuleComponent;
 import org.farmtec.res.rules.impl.ImmutableIntegerRuleLeaf;
 import org.farmtec.res.rules.impl.ImmutableLongRuleLeaf;
@@ -136,8 +135,8 @@ class RuleBuilderUtilTest {
         String jsonString = "{\"tag1\":\"predicate1\",\"tag2\":\"predicate2\",\"tag3\":10}";
 
         //given
-        PredicateFactory<Integer> integerPredicateFactory = new PredicateGeneratorForInt();
-        PredicateFactory<String> stringPredicateFactory = new PredicateGeneratorForStr();
+        PredicateGenerator<Integer> integerPredicateGenerator = new PredicateGeneratorForInt();
+        PredicateGenerator<String> stringPredicateGenerator = new PredicateGeneratorForStr();
 
         Assertions.assertThrows(InvalidOperation.class, () -> {
             RuleBuilderUtil.RulePredicateBuilder
@@ -160,8 +159,8 @@ class RuleBuilderUtilTest {
         String jsonString = "{\"tag1\":\"predicate1\",\"tag2\":\"predicate2\",\"tag3\":10}";
 
         //given
-        PredicateFactory<Integer> integerPredicateFactory = new PredicateGeneratorForInt();
-        PredicateFactory<String> stringPredicateFactory = new PredicateGeneratorForStr();
+        PredicateGenerator<Integer> integerPredicateGenerator = new PredicateGeneratorForInt();
+        PredicateGenerator<String> stringPredicateGenerator = new PredicateGeneratorForStr();
 
         Assertions.assertThrows(InvalidOperation.class, () -> {
             RuleBuilderUtil.RulePredicateBuilder
@@ -181,8 +180,8 @@ class RuleBuilderUtilTest {
 
         //given
         //tag1 EQ predicate1
-        PredicateFactory<Integer> integerPredicateFactory = new PredicateGeneratorForInt();
-        PredicateFactory<String> stringPredicateFactory = new PredicateGeneratorForStr();
+        PredicateGenerator<Integer> integerPredicateGenerator = new PredicateGeneratorForInt();
+        PredicateGenerator<String> stringPredicateGenerator = new PredicateGeneratorForStr();
 
         String value1 = "predicate1";
         RuleComponent p1 = RuleBuilderUtil.RulePredicateBuilder
@@ -265,8 +264,8 @@ class RuleBuilderUtilTest {
     private RuleComponent buildRuleGroup() {
         //given
         //tag1 EQ predicate1
-        PredicateFactory<Integer> integerPredicateFactory = new PredicateGeneratorForInt();
-        PredicateFactory<String> stringPredicateFactory = new PredicateGeneratorForStr();
+        PredicateGenerator<Integer> integerPredicateGenerator = new PredicateGeneratorForInt();
+        PredicateGenerator<String> stringPredicateGenerator = new PredicateGeneratorForStr();
 
         String value1 = "predicate1";
         RuleComponent p1 = RuleBuilderUtil.RulePredicateBuilder

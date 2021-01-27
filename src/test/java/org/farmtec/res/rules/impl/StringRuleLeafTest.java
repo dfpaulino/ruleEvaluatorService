@@ -3,7 +3,6 @@ package org.farmtec.res.rules.impl;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.farmtec.res.enums.Operation;
-import org.farmtec.res.predicate.factory.PredicateFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -13,7 +12,6 @@ import org.mockito.MockitoAnnotations;
 import java.util.function.Predicate;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.assertj.core.api.Assertions.assertThat;

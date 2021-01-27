@@ -49,10 +49,8 @@ NOT CONTAINS|||yes | no
 3. XOR (future)
 4. NOT
 ### future Supported types
-1. DateTime 
-2. Date
-3. Long
-4. BigDecimal
+1. Date
+2. BigDecimal
 
 # Rule Configuration
 

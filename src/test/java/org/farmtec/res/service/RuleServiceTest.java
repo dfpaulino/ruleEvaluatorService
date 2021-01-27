@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import org.farmtec.res.enums.LogicalOperation;
-import org.farmtec.res.predicate.factory.PredicateFactory;
+import org.farmtec.res.predicate.factory.PredicateGenerator;
 import org.farmtec.res.predicate.factory.impl.PredicateGeneratorForInt;
 import org.farmtec.res.predicate.factory.impl.PredicateGeneratorForLong;
 import org.farmtec.res.predicate.factory.impl.PredicateGeneratorForStr;
@@ -174,15 +174,15 @@ class RuleServiceTest {
     private RuleComponent buildRuleGroup1() {
         //given
         //tag1 EQ predicate1
-        PredicateFactory<Integer> integerPredicateFactory = new PredicateGeneratorForInt();
-        PredicateFactory<Long> longPredicateFactory = new PredicateGeneratorForLong();
-        PredicateFactory<String> stringPredicateFactory = new PredicateGeneratorForStr();
-        PredicateFactory<LocalTime> localTimePredicateFactory = new PredicateGeneratorForTime();
+        PredicateGenerator<Integer> integerPredicateGenerator = new PredicateGeneratorForInt();
+        PredicateGenerator<Long> longPredicateGenerator = new PredicateGeneratorForLong();
+        PredicateGenerator<String> stringPredicateGenerator = new PredicateGeneratorForStr();
+        PredicateGenerator<LocalTime> localTimePredicateGenerator = new PredicateGeneratorForTime();
 
         String value1 = "predicate1";
         RuleComponent p1 = RuleBuilderUtil.RulePredicateBuilder
-                .newInstance(integerPredicateFactory, longPredicateFactory, stringPredicateFactory,
-                        localTimePredicateFactory)
+                .newInstance(integerPredicateGenerator, longPredicateGenerator, stringPredicateGenerator,
+                        localTimePredicateGenerator)
                 .setType(String.class)
                 .setTag("tag1")
                 .setOperation(EQ)
@@ -191,8 +191,8 @@ class RuleServiceTest {
         //tag3 > 5
         String value2 = String.valueOf(5);
         RuleComponent p2 = RuleBuilderUtil.RulePredicateBuilder
-                .newInstance(integerPredicateFactory, longPredicateFactory, stringPredicateFactory,
-                        localTimePredicateFactory)
+                .newInstance(integerPredicateGenerator, longPredicateGenerator, stringPredicateGenerator,
+                        localTimePredicateGenerator)
                 .setType(Integer.class)
                 .setTag("tag3")
                 .setOperation(GT)
@@ -201,8 +201,8 @@ class RuleServiceTest {
         // tag2 CONTAINS "pred"
         String value3 = "pred";
         RuleComponent p3 = RuleBuilderUtil.RulePredicateBuilder
-                .newInstance(integerPredicateFactory, longPredicateFactory, stringPredicateFactory,
-                        localTimePredicateFactory)
+                .newInstance(integerPredicateGenerator, longPredicateGenerator, stringPredicateGenerator,
+                        localTimePredicateGenerator)
                 .setType(String.class)
                 .setTag("tag2")
                 .setOperation(CONTAINS)
@@ -211,8 +211,8 @@ class RuleServiceTest {
         // tag4 < 2
         String value4 = String.valueOf(2);
         RuleComponent p4 = RuleBuilderUtil.RulePredicateBuilder
-                .newInstance(integerPredicateFactory, longPredicateFactory, stringPredicateFactory,
-                        localTimePredicateFactory)
+                .newInstance(integerPredicateGenerator, longPredicateGenerator, stringPredicateGenerator,
+                        localTimePredicateGenerator)
                 .setType(Integer.class)
                 .setTag("tag4")
                 .setOperation(LT)

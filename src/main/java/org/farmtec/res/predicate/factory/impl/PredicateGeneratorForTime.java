@@ -1,12 +1,12 @@
 package org.farmtec.res.predicate.factory.impl;
 
 import org.farmtec.res.enums.Operation;
-import org.farmtec.res.predicate.factory.PredicateFactory;
+import org.farmtec.res.predicate.factory.PredicateGenerator;
 
 import java.time.LocalTime;
 import java.util.function.Predicate;
 
-public class PredicateGeneratorForTime implements PredicateFactory<LocalTime> {
+public class PredicateGeneratorForTime implements PredicateGenerator<LocalTime> {
 
 
     public Predicate<LocalTime> getPredicate(Operation operation, LocalTime value) {

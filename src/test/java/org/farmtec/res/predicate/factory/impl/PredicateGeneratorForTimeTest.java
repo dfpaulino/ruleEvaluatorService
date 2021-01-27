@@ -1,7 +1,7 @@
 package org.farmtec.res.predicate.factory.impl;
 
 import org.farmtec.res.enums.Operation;
-import org.farmtec.res.predicate.factory.PredicateFactory;
+import org.farmtec.res.predicate.factory.PredicateGenerator;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalTime;
@@ -15,13 +15,13 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 class PredicateGeneratorForTimeTest {
 
-    private static PredicateFactory<LocalTime> predicateFactory = new PredicateGeneratorForTime();
+    private static PredicateGenerator<LocalTime> predicateGenerator = new PredicateGeneratorForTime();
     private static LocalTime localTimeMatch = LocalTime.parse("21:00:00");
 
     @Test
     void getPredicate_equals() {
         //given
-        Predicate<LocalTime> predicate = predicateFactory.getPredicate(Operation.EQ, localTimeMatch);
+        Predicate<LocalTime> predicate = predicateGenerator.getPredicate(Operation.EQ, localTimeMatch);
 
         assertAll(() -> assertThat(predicate.test(LocalTime.parse("21:00:00"))).isTrue(),
                 () -> assertThat(predicate.test(LocalTime.parse("21:00:01"))).isFalse()
@@ -31,7 +31,7 @@ class PredicateGeneratorForTimeTest {
     @Test
     void getPredicate_NotEquals() {
         //given
-        Predicate<LocalTime> predicate = predicateFactory.getPredicate(Operation.NEQ, localTimeMatch);
+        Predicate<LocalTime> predicate = predicateGenerator.getPredicate(Operation.NEQ, localTimeMatch);
 
         assertAll(() -> assertThat(predicate.test(LocalTime.parse("20:00:00"))).isTrue(),
                 () -> assertThat(predicate.test(LocalTime.parse("21:00:00"))).isFalse()
@@ -41,7 +41,7 @@ class PredicateGeneratorForTimeTest {
     @Test
     void getPredicate_GreaterThan() {
         //given
-        Predicate<LocalTime> predicate = predicateFactory.getPredicate(Operation.GT, localTimeMatch);
+        Predicate<LocalTime> predicate = predicateGenerator.getPredicate(Operation.GT, localTimeMatch);
 
         assertAll(() -> assertThat(predicate.test(LocalTime.parse("22:00:00"))).isTrue(),
                 () -> assertThat(predicate.test(LocalTime.parse("20:00:00"))).isFalse()
@@ -51,7 +51,7 @@ class PredicateGeneratorForTimeTest {
     @Test
     void getPredicate_GreaterEqualsThan() {
         //given
-        Predicate<LocalTime> predicate = predicateFactory.getPredicate(Operation.GTE, localTimeMatch);
+        Predicate<LocalTime> predicate = predicateGenerator.getPredicate(Operation.GTE, localTimeMatch);
 
         assertAll(() -> assertThat(predicate.test(LocalTime.parse("22:00:00"))).isTrue(),
                 () -> assertThat(predicate.test(localTimeMatch)).isTrue(),
@@ -62,7 +62,7 @@ class PredicateGeneratorForTimeTest {
     @Test
     void getPredicate_LessThan() {
         //given
-        Predicate<LocalTime> predicate = predicateFactory.getPredicate(Operation.LT, localTimeMatch);
+        Predicate<LocalTime> predicate = predicateGenerator.getPredicate(Operation.LT, localTimeMatch);
 
         assertAll(() -> assertThat(predicate.test(LocalTime.parse("20:00:00"))).isTrue(),
                 () -> assertThat(predicate.test(LocalTime.parse("22:00:00"))).isFalse()
@@ -72,7 +72,7 @@ class PredicateGeneratorForTimeTest {
     @Test
     void getPredicate_LessEqualsThan() {
         //given
-        Predicate<LocalTime> predicate = predicateFactory.getPredicate(Operation.LTE, localTimeMatch);
+        Predicate<LocalTime> predicate = predicateGenerator.getPredicate(Operation.LTE, localTimeMatch);
 
         assertAll(() -> assertThat(predicate.test(LocalTime.parse("20:00:00"))).isTrue(),
                 () -> assertThat(predicate.test(LocalTime.parse("21:00:00"))).isTrue(),
@@ -83,7 +83,7 @@ class PredicateGeneratorForTimeTest {
     @Test
     void getPredicate_Contais_shouldBeNull() {
         //given
-        Predicate<LocalTime> predicate = predicateFactory.getPredicate(Operation.CONTAINS, localTimeMatch);
+        Predicate<LocalTime> predicate = predicateGenerator.getPredicate(Operation.CONTAINS, localTimeMatch);
         assertThat(predicate).isNull();
     }
 }

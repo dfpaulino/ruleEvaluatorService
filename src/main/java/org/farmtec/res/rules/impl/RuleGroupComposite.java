@@ -27,6 +27,7 @@ public abstract class RuleGroupComposite implements RuleComponent {
             }
             return booleanList.get(0);
         } else if (booleanList.size()>=2) {
+            //TODO use .reduce()
             bool=this.getLogicalOperation().test(booleanList.get(0),booleanList.get(1));
             for (int i=2;i<booleanList.size();i++) {
                 bool=this.getLogicalOperation().test(bool,booleanList.get(i));

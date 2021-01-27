@@ -1,11 +1,11 @@
 package org.farmtec.res.predicate.factory.impl;
 
 import org.farmtec.res.enums.Operation;
-import org.farmtec.res.predicate.factory.PredicateFactory;
+import org.farmtec.res.predicate.factory.PredicateGenerator;
 
 import java.util.function.Predicate;
 
-public class PredicateGeneratorForLong implements PredicateFactory<Long> {
+public class PredicateGeneratorForLong implements PredicateGenerator<Long> {
 
 
     public Predicate<Long> getPredicate(Operation operation, Long value) {

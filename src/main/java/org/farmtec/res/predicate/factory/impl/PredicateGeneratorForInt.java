@@ -1,12 +1,12 @@
 package org.farmtec.res.predicate.factory.impl;
 
 import org.farmtec.res.enums.Operation;
-import org.farmtec.res.predicate.factory.PredicateFactory;
+import org.farmtec.res.predicate.factory.PredicateGenerator;
 
 
 import java.util.function.Predicate;
 
-public class PredicateGeneratorForInt implements PredicateFactory<Integer> {
+public class PredicateGeneratorForInt implements PredicateGenerator<Integer> {
 
 
     public Predicate<Integer> getPredicate(Operation operation, Integer value) {

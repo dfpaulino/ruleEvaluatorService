@@ -2,7 +2,7 @@ package org.farmtec.res.service.builder.utils;
 
 import org.farmtec.res.enums.LogicalOperation;
 import org.farmtec.res.enums.Operation;
-import org.farmtec.res.predicate.factory.PredicateFactory;
+import org.farmtec.res.predicate.factory.PredicateGenerator;
 import org.farmtec.res.predicate.factory.impl.PredicateGeneratorForInt;
 import org.farmtec.res.predicate.factory.impl.PredicateGeneratorForLong;
 import org.farmtec.res.predicate.factory.impl.PredicateGeneratorForStr;
@@ -119,44 +119,44 @@ public class RuleBuilderUtil {
 
     /**
      * Builder for RuleComponentLeaf. This is the base rule
-     * This will create predicate based on the {@code PredicateFactory} injected
+     * This will create predicate based on the {@code PredicateGenerator} injected
      */
     public static class RulePredicateBuilder {
         private Operation operation;
         private String tag;
         private Class<?> type;
         private String value;
-        private final PredicateFactory<Integer> integerPredicateFactory;
-        private final PredicateFactory<Long> longPredicateFactory;
-        private final PredicateFactory<String> stringPredicateFactory;
-        private final PredicateFactory<LocalTime> localTimePredicateFactory;
+        private final PredicateGenerator<Integer> integerPredicateGenerator;
+        private final PredicateGenerator<Long> longPredicateGenerator;
+        private final PredicateGenerator<String> stringPredicateGenerator;
+        private final PredicateGenerator<LocalTime> localTimePredicateGenerator;
 
 
-        private RulePredicateBuilder(final PredicateFactory<Integer> integerPredicateFactory,
-                                     final PredicateFactory<Long> longPredicateFactory,
-                                     final PredicateFactory<String> stringPredicateFactory,
-                                     final PredicateFactory<LocalTime> localTimePredicateFactory) {
-            this.integerPredicateFactory = integerPredicateFactory;
-            this.longPredicateFactory = longPredicateFactory;
-            this.stringPredicateFactory = stringPredicateFactory;
-            this.localTimePredicateFactory = localTimePredicateFactory;
+        private RulePredicateBuilder(final PredicateGenerator<Integer> integerPredicateGenerator,
+                                     final PredicateGenerator<Long> longPredicateGenerator,
+                                     final PredicateGenerator<String> stringPredicateGenerator,
+                                     final PredicateGenerator<LocalTime> localTimePredicateGenerator) {
+            this.integerPredicateGenerator = integerPredicateGenerator;
+            this.longPredicateGenerator = longPredicateGenerator;
+            this.stringPredicateGenerator = stringPredicateGenerator;
+            this.localTimePredicateGenerator = localTimePredicateGenerator;
         }
 
 
         /**
          * RulePredicateBuilder allows to create a base rule {@code RuleComponent}
-         * Its required to inject {@code PredicateFactory} for each type
+         * Its required to inject {@code PredicateGenerator} for each type
          *
-         * @param integerPredicateFactory of type {@code PredicateFactory<Integer>}
-         * @param stringPredicateFactory  of type {@code PredicateFactory<String>}
+         * @param integerPredicateGenerator of type {@code PredicateGenerator<Integer>}
+         * @param stringPredicateGenerator  of type {@code PredicateGenerator<String>}
          * @return {@code RuleComponent}
          */
-        public static RulePredicateBuilder newInstance(PredicateFactory<Integer> integerPredicateFactory,
-                                                       PredicateFactory<Long> longPredicateFactory,
-                                                       PredicateFactory<String> stringPredicateFactory,
-                                                       PredicateFactory<LocalTime> localTimePredicateFactory) {
-            return new RulePredicateBuilder(integerPredicateFactory, longPredicateFactory, stringPredicateFactory,
-                    localTimePredicateFactory);
+        public static RulePredicateBuilder newInstance(PredicateGenerator<Integer> integerPredicateGenerator,
+                                                       PredicateGenerator<Long> longPredicateGenerator,
+                                                       PredicateGenerator<String> stringPredicateGenerator,
+                                                       PredicateGenerator<LocalTime> localTimePredicateGenerator) {
+            return new RulePredicateBuilder(integerPredicateGenerator, longPredicateGenerator, stringPredicateGenerator,
+                    localTimePredicateGenerator);
         }
 
         /**
@@ -166,13 +166,13 @@ public class RuleBuilderUtil {
          * @return {@code RuleComponent}
          */
         public static RulePredicateBuilder newInstance() {
-            PredicateFactory<Integer> integerPredicateFactory = new PredicateGeneratorForInt();
-            PredicateFactory<Long> longPredicateFactory = new PredicateGeneratorForLong();
-            PredicateFactory<String> stringPredicateFactory = new PredicateGeneratorForStr();
-            PredicateFactory<LocalTime> localTimePredicateFactory = new PredicateGeneratorForTime();
+            PredicateGenerator<Integer> integerPredicateGenerator = new PredicateGeneratorForInt();
+            PredicateGenerator<Long> longPredicateGenerator = new PredicateGeneratorForLong();
+            PredicateGenerator<String> stringPredicateGenerator = new PredicateGeneratorForStr();
+            PredicateGenerator<LocalTime> localTimePredicateGenerator = new PredicateGeneratorForTime();
 
-            return new RulePredicateBuilder(integerPredicateFactory, longPredicateFactory, stringPredicateFactory,
-                    localTimePredicateFactory);
+            return new RulePredicateBuilder(integerPredicateGenerator, longPredicateGenerator, stringPredicateGenerator,
+                    localTimePredicateGenerator);
         }
 
         /**
@@ -199,7 +199,7 @@ public class RuleBuilderUtil {
 
         /**
          * Set the Type of the variable eg String.class, Integer.class
-         * Ensure there is a {@code PredicateFactory} for the relevant type
+         * Ensure there is a {@code PredicateGenerator} for the relevant type
          *
          * @param type {@code class} type of variable
          * @return {@code RulePredicateBuilder}
@@ -226,32 +226,32 @@ public class RuleBuilderUtil {
 
             if (this.type == Integer.class) {
                 Integer valueInt = Integer.valueOf(this.value);
-                if (null == integerPredicateFactory.getPredicate(this.operation, valueInt)) {
+                if (null == integerPredicateGenerator.getPredicate(this.operation, valueInt)) {
                     String error = String.format("Operation Not supported for tag [%s] operation [%s] value [%s]", this.tag, this.operation.name(), this.value);
                     throw new InvalidOperation(error);
                 }
-                ruleComponent = ImmutableIntegerRuleLeaf.of(this.tag, this.operation, valueInt, Integer.class, integerPredicateFactory.getPredicate(this.operation, valueInt));
+                ruleComponent = ImmutableIntegerRuleLeaf.of(this.tag, this.operation, valueInt, Integer.class, integerPredicateGenerator.getPredicate(this.operation, valueInt));
             } else if (this.type == Long.class) {
                 Long valueLong = Long.valueOf(this.value);
-                if (null == longPredicateFactory.getPredicate(this.operation, valueLong)) {
+                if (null == longPredicateGenerator.getPredicate(this.operation, valueLong)) {
                     String error = String.format("Operation Not supported for tag [%s] operation [%s] value [%s]", this.tag, this.operation.name(), this.value);
                     throw new InvalidOperation(error);
                 }
-                ruleComponent = ImmutableLongRuleLeaf.of(this.tag, this.operation, valueLong, Integer.class, longPredicateFactory.getPredicate(this.operation, valueLong));
+                ruleComponent = ImmutableLongRuleLeaf.of(this.tag, this.operation, valueLong, Integer.class, longPredicateGenerator.getPredicate(this.operation, valueLong));
 
             } else if (this.type == String.class) {
-                if (null == stringPredicateFactory.getPredicate(this.operation, this.value)) {
+                if (null == stringPredicateGenerator.getPredicate(this.operation, this.value)) {
                     String error = String.format("Operation Not supported for tag [%s] operation [%s] value [%s]", this.tag, this.operation.name(), this.value);
                     throw new InvalidOperation(error);
                 }
-                ruleComponent = ImmutableStringRuleLeaf.of(this.tag, this.operation, this.value, String.class, stringPredicateFactory.getPredicate(this.operation, this.value));
+                ruleComponent = ImmutableStringRuleLeaf.of(this.tag, this.operation, this.value, String.class, stringPredicateGenerator.getPredicate(this.operation, this.value));
             } else if (this.type == LocalTime.class) {
                 LocalTime lt = LocalTime.parse(this.value);
-                if (null == localTimePredicateFactory.getPredicate(this.operation, lt)) {
+                if (null == localTimePredicateGenerator.getPredicate(this.operation, lt)) {
                     String error = String.format("Operation Not supported for tag [%s] operation [%s] value [%s]", this.tag, this.operation.name(), this.value);
                     throw new InvalidOperation(error);
                 }
-                ruleComponent = ImmutableTimeRuleLeaf.of(this.tag, this.operation, this.value, LocalTime.class, localTimePredicateFactory.getPredicate(this.operation, lt));
+                ruleComponent = ImmutableTimeRuleLeaf.of(this.tag, this.operation, this.value, LocalTime.class, localTimePredicateGenerator.getPredicate(this.operation, lt));
             } else {
                 String error = String.format("Type not Supported Predicate for tag [%s] operation [%s] value [%s]", this.tag, this.operation.name(), this.value);
                 throw new InvalidOperation(error);
