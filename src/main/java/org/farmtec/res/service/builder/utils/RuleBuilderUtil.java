@@ -120,7 +120,7 @@ public class RuleBuilderUtil {
      * This will create predicate based on the {@code PredicateGenerator} injected
      */
     public static class RulePredicateBuilder {
-        public static PredicateGeneratorFactory DEFAULT_PREDIATE_GENERATOR_FACTORY = new PredicateGeneratorFactoryImpl();
+        public static PredicateGeneratorFactory DEFAULT_PREDICATE_GENERATOR_FACTORY = new PredicateGeneratorFactoryImpl();
 
         private Operation operation;
         private String tag;
@@ -159,7 +159,7 @@ public class RuleBuilderUtil {
          * @return {@code RuleComponent}
          */
         public static RulePredicateBuilder newInstance() {
-            return new RulePredicateBuilder(DEFAULT_PREDIATE_GENERATOR_FACTORY);
+            return new RulePredicateBuilder(DEFAULT_PREDICATE_GENERATOR_FACTORY);
         }
 
         /**

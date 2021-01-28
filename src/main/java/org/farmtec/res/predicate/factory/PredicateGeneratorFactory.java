@@ -1,7 +1,5 @@
 package org.farmtec.res.predicate.factory;
 
-import org.farmtec.res.predicate.factory.PredicateGenerator;
-
 import java.time.LocalTime;
 
 /**

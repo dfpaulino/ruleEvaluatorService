@@ -60,7 +60,7 @@ For this you can use the provided `RuleLoaderService` implementation proper
 `RulesParser` implementation.
 Just implement a `RulesParser`, and inject it into the `RulesLoaderService`
 
-To test the rule, create a critera in JsonNode, and use the RuleLoaderService 
+To test the rule, create a criteria in JsonNode, and use the RuleLoaderService
 to provide the list of configured rules
 ``` javascript
  String criteriaStr = "{\"age\":10,\"name\":\"cano\",\"car\":\"renault\",\"address\":\"Spain\"," +
@@ -107,6 +107,36 @@ From the example above we would have:
  RuleComponent rule = ImmutableRuleGroupComposite.of(Arrays.asList(group11,group12), LogicalOperation.AND);
 
 ``` 
+A Utility class is provided to ease the creation of Predicates and Rules
+
+to create a base predicate
+```javascript
+RuleComponent ruleComponent = RuleBuilderUtil.RulePredicateBuilder
+                .newInstance()
+                .setType(Integer.class)
+                .setTag("tag3")
+                .setOperation(EQ)
+                .setValue(VALUE).build();
+```
+to create a composite group
+```javascript
+RuleComponent ruleGroup12 = RuleBuilderUtil.RuleComponentBuilder
+                .newInstance()
+                .setLogicalOperation(LogicalOperation.AND)
+                .setRuleComponentList(Arrays.asList(p3, p4)).build();
+
+```
+where px can be any ruleComponent
+
+to create a Rule
+```javascript
+Rule rule = RuleBuilderUtil.RuleBuilder
+                .newInstance()
+                .setPriority(1)
+                .setName("Rule-1")
+                .setActions(new ArrayList<Action>())
+                .setRuleComponent(ruleGroup12).build();
+```
 
 up to here, the rule is configured and ready to be tested against a JsonNode
 
