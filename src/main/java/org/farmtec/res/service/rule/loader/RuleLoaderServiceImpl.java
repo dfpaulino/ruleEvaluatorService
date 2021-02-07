@@ -71,7 +71,7 @@ public class RuleLoaderServiceImpl implements RuleLoaderService {
         logger.info("starting loading rules");
 
         try {
-            if (rulesParser.loadFile()) {
+            if (rulesParser.loadRules()) {
                 logger.info("rules ready to be loaded into memory");
                 List<Rule> freshRules = createRules();
                 if (!freshRules.isEmpty()) {

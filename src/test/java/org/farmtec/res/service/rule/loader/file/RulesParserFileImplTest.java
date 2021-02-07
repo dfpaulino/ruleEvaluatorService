@@ -17,7 +17,7 @@ class RulesParserFileImplTest {
         //given
         RulesParser rulesParser = new RulesParserFileImpl("src/test/resources/rules101.cfg");
         //when
-        assertThat(rulesParser.loadFile()).isTrue();
+        assertThat(rulesParser.loadRules()).isTrue();
     }
 
     @Test
@@ -25,7 +25,7 @@ class RulesParserFileImplTest {
         //given
         RulesParser rulesParser = new RulesParserFileImpl("src/test/resources/rules101.cfg");
         //when
-        rulesParser.loadFile();
+        rulesParser.loadRules();
         //then
         assertThat(rulesParser.getRuleLeafsDto().size()).isEqualTo(4);
         //pick any predicate and validate
@@ -43,7 +43,7 @@ class RulesParserFileImplTest {
         //given
         RulesParser rulesParser = new RulesParserFileImpl("src/test/resources/rules101.cfg");
         //when
-        rulesParser.loadFile();
+        rulesParser.loadRules();
         //then
         assertThat(rulesParser.getGroupCompositesDto().size()).isEqualTo(3);
         // pick any group and validate
@@ -60,7 +60,7 @@ class RulesParserFileImplTest {
         //given
         RulesParser rulesParser = new RulesParserFileImpl("src/test/resources/rules101.cfg");
         //when
-        rulesParser.loadFile();
+        rulesParser.loadRules();
         //then
         assertThat(rulesParser.getRulesDto().size()).isEqualTo(2);
         // pick any Rule and validate
@@ -78,7 +78,7 @@ class RulesParserFileImplTest {
         //given
         RulesParser rulesParser = new RulesParserFileImpl("/tmp/rules101.cfg");
         //when
-        assertThat(rulesParser.loadFile()).isFalse();
+        assertThat(rulesParser.loadRules()).isFalse();
         assertThat(rulesParser.getRuleLeafsDto().size()).isEqualTo(0);
         assertThat(rulesParser.getGroupCompositesDto().size()).isEqualTo(0);
         assertThat(rulesParser.getRuleLeafsDto().size()).isEqualTo(0);
@@ -90,7 +90,7 @@ class RulesParserFileImplTest {
 
         RulesParser rulesParser = new RulesParserFileImpl("src/test/resources/rules_incompleteGroups.cfg");
         //when
-        assertThat(rulesParser.loadFile()).isTrue();
+        assertThat(rulesParser.loadRules()).isTrue();
         assertThat(rulesParser.getRuleLeafsDto().size()).isEqualTo(3);
         assertThat(rulesParser.getGroupCompositesDto().size()).isEqualTo(2);
         assertThat(rulesParser.getRulesDto().size()).isEqualTo(2);
@@ -102,13 +102,16 @@ class RulesParserFileImplTest {
 
         RulesParser rulesParser = new RulesParserFileImpl("src/test/resources/rules_incompleteGroups.cfg");
         //when
-        assertThat(rulesParser.loadFile()).isTrue();
+        assertThat(rulesParser.loadRules()).isTrue();
         assertThat(rulesParser.getRuleLeafsDto().size()).isEqualTo(3);
         assertThat(rulesParser.getGroupCompositesDto().size()).isEqualTo(2);
         assertThat(rulesParser.getRulesDto().size()).isEqualTo(2);
 
         //when
-        ((RulesParserFileImpl) rulesParser).loadFile("src/test/resources/rules101.cfg");
+        RulesParserFileImpl rulesParserImp = (RulesParserFileImpl) rulesParser;
+        rulesParserImp.setFilePathName("src/test/resources/rules101.cfg");
+
+        rulesParser.loadRules();
         //then
         assertThat(rulesParser.getGroupCompositesDto().size()).isEqualTo(3);
         assertThat(rulesParser.getRuleLeafsDto().size()).isEqualTo(4);

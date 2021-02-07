@@ -16,7 +16,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
 /**
@@ -51,7 +50,7 @@ class RuleLoaderServiceImplTest {
         when(rulesParser.getRuleLeafsDto()).thenReturn(leafDtoMap);
         when(rulesParser.getGroupCompositesDto()).thenReturn(groupCompositeDtoMap);
         when(rulesParser.getRulesDto()).thenReturn(ruleDtoMap);
-        when(rulesParser.loadFile()).thenReturn(true);
+        when(rulesParser.loadRules()).thenReturn(true);
 
         //when
         RuleLoaderService ruleLoaderService = new RuleLoaderServiceImpl(rulesParser);

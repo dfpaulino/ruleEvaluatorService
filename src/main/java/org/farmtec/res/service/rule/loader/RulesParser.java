@@ -13,9 +13,7 @@ import java.util.Map;
  */
 public interface RulesParser {
 
-    boolean loadFile();
-
-    boolean loadFile(String filePathName);
+    boolean loadRules();
 
     Map<String, LeafDto> getRuleLeafsDto();
 

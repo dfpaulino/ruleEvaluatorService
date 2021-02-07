@@ -51,18 +51,12 @@ public class RulesParserFileImpl implements RulesParser {
 
 
     @Override
-    public boolean loadFile() {
+    public boolean loadRules() {
         //clear the Maps for future loading
         leafDtoMap.clear();
         groupCompositeDtoMap.clear();
         ruleDtoMap.clear();
         return openAndReadFile(this.filePathName);
-    }
-
-    @Override
-    public boolean loadFile(String filePathName) {
-        this.filePathName = filePathName;
-        return loadFile();
     }
 
     private boolean openAndReadFile(String fileName) {
@@ -214,4 +208,7 @@ public class RulesParserFileImpl implements RulesParser {
         PREDICATE, GROUP_COMPOSITE, RULE, NONE
     }
 
+    public void setFilePathName(String filePathName) {
+        this.filePathName = filePathName;
+    }
 }
