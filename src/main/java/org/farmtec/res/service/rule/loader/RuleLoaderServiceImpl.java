@@ -57,12 +57,13 @@ public class RuleLoaderServiceImpl implements RuleLoaderService {
      * Submits the refresh task
      */
     @Override
-    public synchronized void refreshRules() {
+    public synchronized Future<Boolean> refreshRules() {
         logger.info("refresh task will be submitted");
-        executor.submit(this::refreshRulesTask);
+        Future<Boolean> f = executor.submit(this::refreshRulesTask);
+        return f;
     }
 
-    public void refreshRulesTask() {
+    public Boolean refreshRulesTask() {
         synchronized (this) {
             isLoadRuleDone = false;
             isLoadRuleSuccess = false;
@@ -88,6 +89,7 @@ public class RuleLoaderServiceImpl implements RuleLoaderService {
         } catch (Exception e) {
             logger.error("failed to load rules Exception", e);
         }
+        return true;
     }
 
     private List<Rule> createRules() {
@@ -127,13 +129,15 @@ public class RuleLoaderServiceImpl implements RuleLoaderService {
      * This is a recursive method to load the tree of groups.
      * the leafs of the tree, AKA the base predicates must be preloaded in {@code ruleComponentMap}
      * The method will populate the {@code ruleComponentMap} as it create new {@link RuleComponent}
-     * @param groupName name of the group to buid
-     * @param ruleComponentMap  Map of built ruleComponents. It must have at least the base predicate, leafs of the rule tree
-     * @param groupCompositeDtoMap  Map of groupCompostitDto {@link GroupCompositeDto}
+     *
+     * @param groupName            name of the group to buid
+     * @param ruleComponentMap     Map of built ruleComponents. It must have at least the base predicate, leafs of the rule tree
+     * @param groupCompositeDtoMap Map of groupCompostitDto {@link GroupCompositeDto}
      * @return {@link RuleComponent} fully compleete ruleComponent. this is loaded into {@code ruleComponentMap}
      */
     private RuleComponent getAndCreateRuleComponent(String groupName,
-                                                    Map<String, RuleComponent> ruleComponentMap, Map<String, GroupCompositeDto> groupCompositeDtoMap) {
+                                                    Map<String, RuleComponent> ruleComponentMap,
+                                                    Map<String, GroupCompositeDto> groupCompositeDtoMap) {
         //build the tree
         if (!ruleComponentMap.containsKey(groupName)) {
             logger.debug("searching for [{}]", groupName);
@@ -145,8 +149,6 @@ public class RuleLoaderServiceImpl implements RuleLoaderService {
 
             logger.info("getting groupComponent [{}]", groupName);
             for (String name : groupCompositeDto.getPredicateNames()) {
-                // groupRuleComponent.put(name,
-                //         getAndCreateRuleComponent(name, groupRuleComponent, groupCompositeDtoMap).get(name));
                 ruleComponentsForThisRuleComponent.add(
                         getAndCreateRuleComponent(name, ruleComponentMap, groupCompositeDtoMap)
                 );

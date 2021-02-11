@@ -13,6 +13,7 @@ import org.farmtec.res.rules.RuleComponent;
 import org.farmtec.res.service.builder.utils.RuleBuilderUtil;
 import org.farmtec.res.service.model.ImmutableRule;
 import org.farmtec.res.service.model.Rule;
+import org.farmtec.res.service.rule.loader.RuleLoaderService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -35,7 +36,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 
-class RuleServiceTest {
+class RuleServiceImplTest {
 
     private final static String jsonString = "{\"tag1\":\"predicate1\"," +
             "\"tag2\":\"predicate2\",\"tag3\":10,\"tag4\":1," +
@@ -52,6 +53,9 @@ class RuleServiceTest {
     @Mock
     private Rule r5;
 
+    @Mock
+    private RuleLoaderService ruleLoaderService;
+
     @BeforeEach
     void setUp() {
         MockitoAnnotations.initMocks(this);
@@ -66,7 +70,7 @@ class RuleServiceTest {
         Mockito.when(r3.test(any(JsonNode.class))).thenReturn(true);
         Mockito.when(r4.test(any(JsonNode.class))).thenReturn(false);
         List<Rule> ruleList = Arrays.asList(r1, r2, r3, r4);
-        RuleService ruleService = new RuleService();
+        RuleServiceImpl ruleService = new RuleServiceImpl(ruleLoaderService);
         ruleService.setRuleList(ruleList);
         //when
         assertThat(ruleService.getRuleList()).isNotNull();
@@ -85,7 +89,7 @@ class RuleServiceTest {
         Mockito.when(r3.test(any(JsonNode.class))).thenReturn(true);
         Mockito.when(r4.test(any(JsonNode.class))).thenReturn(false);
         List<Rule> ruleList = Arrays.asList(r1, r2, r3, r4);
-        RuleService ruleService = new RuleService();
+        RuleServiceImpl ruleService = new RuleServiceImpl(ruleLoaderService);
         ruleService.setRuleList(ruleList);
         //when
         List<Rule> rules = ruleService.getRuleList();
@@ -100,7 +104,7 @@ class RuleServiceTest {
         Mockito.when(r3.test(any(JsonNode.class))).thenReturn(true);
         Mockito.when(r4.test(any(JsonNode.class))).thenReturn(false);
         List<Rule> ruleList = Arrays.asList(r1, r2, r3, r4);
-        RuleService ruleService = new RuleService();
+        RuleServiceImpl ruleService = new RuleServiceImpl(ruleLoaderService);
         ruleService.setRuleList(ruleList);
         //when
         Date d1 = ruleService.getLastUpdate();
@@ -124,7 +128,7 @@ class RuleServiceTest {
         Mockito.when(r4.test(any(JsonNode.class))).thenReturn(false);
         Mockito.when(r4.getName()).thenReturn("r4");
         List<Rule> ruleList = Arrays.asList(r1, r2, r3, r4);
-        RuleService ruleService = new RuleService();
+        RuleServiceImpl ruleService = new RuleServiceImpl(ruleLoaderService);
         ruleService.setRuleList(ruleList);
 
         //when
@@ -145,7 +149,7 @@ class RuleServiceTest {
         RuleComponent rc2 = buildRuleGroup2();
         Rule r1 = ImmutableRule.of("r1", rc1, 1, new ArrayList<>());
         Rule r2 = ImmutableRule.of("r2", rc2, 2, new ArrayList<>());
-        RuleService ruleService = new RuleService();
+        RuleServiceImpl ruleService = new RuleServiceImpl(ruleLoaderService);
         ruleService.setRuleList(Arrays.asList(r2, r1));
         //when
         ObjectMapper mapper = new ObjectMapper();
@@ -162,7 +166,7 @@ class RuleServiceTest {
         RuleComponent rc2 = buildRuleGroup2();
         Rule r1 = ImmutableRule.of("r1", rc1, 1, new ArrayList<>());
         Rule r2 = ImmutableRule.of("r2", rc2, 2, new ArrayList<>());
-        RuleService ruleService = new RuleService();
+        RuleServiceImpl ruleService = new RuleServiceImpl(ruleLoaderService);
         ruleService.setRuleList(Arrays.asList(r2, r1));
         //when
         ObjectMapper mapper = new ObjectMapper();
