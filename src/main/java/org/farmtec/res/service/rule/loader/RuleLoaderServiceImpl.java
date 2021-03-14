@@ -6,8 +6,10 @@ import org.farmtec.res.enums.Operation;
 import org.farmtec.res.enums.SupportedTypes;
 import org.farmtec.res.rules.RuleComponent;
 import org.farmtec.res.service.builder.utils.RuleBuilderUtil;
+import org.farmtec.res.service.exceptions.InvalidOperation;
 import org.farmtec.res.service.model.Rule;
 import org.farmtec.res.service.rule.loader.dto.GroupCompositeDto;
+import org.farmtec.res.service.rule.loader.dto.LeafDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -92,18 +94,35 @@ public class RuleLoaderServiceImpl implements RuleLoaderService {
         return true;
     }
 
+    private RuleComponent buildPredicate(LeafDto leafDto) {
+        RuleComponent basePredicate;
+        try {
+            basePredicate = RuleBuilderUtil.RulePredicateBuilder
+                    .newInstance()
+                    .setType(SupportedTypes.getSupportedTypeFrom(leafDto.getType()))
+                    .setTag(leafDto.getTag())
+                    .setOperation(Operation.fromString(leafDto.getOperation()))
+                    .setValue(leafDto.getValue()).build();
+
+        }catch (InvalidOperation|NumberFormatException e){
+            logger.error("Error building Predicate. Creating default predicate",e);
+            basePredicate = RuleBuilderUtil.RulePredicateBuilder
+                    .newInstance().buildDefaultPredicate();
+        }
+        return basePredicate;
+    }
+
     private List<Rule> createRules() {
 
-        //load the base predicates
+        /*load the base predicates
+        Note, we should use the RuleBuildUtil
+        In case it throws an InvalidOperationException, just loog it and keep going on
+        */
+
         Map<String, RuleComponent> ruleComponentMap = rulesParser.getRuleLeafsDto().entrySet().stream()
                 .collect(Collectors.toMap(
                         Map.Entry::getKey,
-                        entry -> RuleBuilderUtil.RulePredicateBuilder
-                                .newInstance()
-                                .setType(SupportedTypes.getSupportedTypeFrom(entry.getValue().getType()))
-                                .setTag(entry.getValue().getTag())
-                                .setOperation(Operation.fromString(entry.getValue().getOperation()))
-                                .setValue(entry.getValue().getValue()).build()
+                        entry -> this.buildPredicate(entry.getValue())
                 ));
 
         //now that we have loaded the base Predicates (leafs of the tree), we can build the rules

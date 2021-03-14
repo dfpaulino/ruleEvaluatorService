@@ -6,7 +6,12 @@ import org.farmtec.res.predicate.factory.PredicateGenerator;
 import org.farmtec.res.predicate.factory.PredicateGeneratorFactory;
 import org.farmtec.res.predicate.factory.impl.*;
 import org.farmtec.res.rules.RuleComponent;
-import org.farmtec.res.rules.impl.*;
+
+import org.farmtec.res.rules.impl.ImmutableIntegerRuleLeaf;
+import org.farmtec.res.rules.impl.ImmutableLongRuleLeaf;
+import org.farmtec.res.rules.impl.ImmutableRuleGroupComposite;
+import org.farmtec.res.rules.impl.ImmutableStringRuleLeaf;
+import org.farmtec.res.rules.impl.ImmutableTimeRuleLeaf;
 import org.farmtec.res.service.exceptions.InvalidOperation;
 import org.farmtec.res.service.model.Action;
 import org.farmtec.res.service.model.ImmutableRule;
@@ -207,6 +212,9 @@ public class RuleBuilderUtil {
             return this;
         }
 
+        public RuleComponent buildDefaultPredicate() {
+            return ImmutableIntegerRuleLeaf.of("integer", Operation.EQ, 0, Integer.class, (i)->false);
+        }
         public RuleComponent build() throws InvalidOperation, NumberFormatException {
             RuleComponent ruleComponent;
             //bit of validation
