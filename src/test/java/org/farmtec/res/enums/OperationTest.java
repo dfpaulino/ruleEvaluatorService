@@ -3,6 +3,7 @@ package org.farmtec.res.enums;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class OperationTest {
 
@@ -83,8 +84,7 @@ class OperationTest {
         //given
         String eq="?.";
         //when
-        Operation operation=Operation.fromString(eq);
         //then
-        assertThat(operation).isNull();
+        assertThrows(IllegalArgumentException.class, () -> Operation.fromString(eq));
     }
 }

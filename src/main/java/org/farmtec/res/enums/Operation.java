@@ -25,8 +25,6 @@ public enum Operation {
                 return op;
             }
         }
-        return null;
-
+        throw new IllegalArgumentException("Invalid Operation");
     }
-
 }
