@@ -35,7 +35,7 @@ public enum SupportedTypes {
                 break;
 
             default:
-                throw new RuntimeException("Type not supported");
+                throw new IllegalArgumentException("Type "+ type.toLowerCase() +" not supported");
         }
         return t;
     }
