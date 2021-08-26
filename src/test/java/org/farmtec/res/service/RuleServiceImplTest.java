@@ -38,9 +38,14 @@ import static org.mockito.Mockito.verify;
 
 class RuleServiceImplTest {
 
-    private final static String jsonString = "{\"tag1\":\"predicate1\"," +
-            "\"tag2\":\"predicate2\",\"tag3\":10,\"tag4\":1," +
-            "\"tag5\":\"Hello World\",\"tag6\":1,\"tag7\":\"sunny day\",\"tag8\":20}";
+    private final static String jsonString = "{\"filter\":\"filter123\"," +
+        "\"tag1\":\"predicate1\"," +
+        "\"tag2\":\"predicate2\"," +
+        "\"tag3\":10,\"tag4\":1," +
+        "\"tag5\":\"Hello World\"," +
+        "\"tag6\":1," +
+        "\"tag7\":\"sunny day\"," +
+        "\"tag8\":20}";
 
     @Mock
     private Rule r1;
@@ -117,15 +122,19 @@ class RuleServiceImplTest {
     }
 
     @Test
-    void test_Rule() throws Exception {
+    void test_Rule_whenUsingNoFilter_shouldNotFilterRules() throws Exception {
         //given
         Mockito.when(r1.test(any(JsonNode.class))).thenReturn(true);
+        Mockito.when(r1.getFilter()).thenReturn(new String());
         Mockito.when(r1.getName()).thenReturn("r1");
         Mockito.when(r2.test(any(JsonNode.class))).thenReturn(false);
+        Mockito.when(r2.getFilter()).thenReturn(new String());
         Mockito.when(r2.getName()).thenReturn("r2");
         Mockito.when(r3.test(any(JsonNode.class))).thenReturn(true);
+        Mockito.when(r3.getFilter()).thenReturn(new String());
         Mockito.when(r3.getName()).thenReturn("r3");
         Mockito.when(r4.test(any(JsonNode.class))).thenReturn(false);
+        Mockito.when(r4.getFilter()).thenReturn(new String());
         Mockito.when(r4.getName()).thenReturn("r4");
         List<Rule> ruleList = Arrays.asList(r1, r2, r3, r4);
         RuleServiceImpl ruleService = new RuleServiceImpl(ruleLoaderService);
@@ -143,12 +152,43 @@ class RuleServiceImplTest {
     }
 
     @Test
-    public void test_rule2() throws Exception {
+    void test_Rule_whenUsingFilter_shouldFilterRule() throws Exception {
+        //given
+        Mockito.when(r1.test(any(JsonNode.class))).thenReturn(true);
+        Mockito.when(r1.getFilter()).thenReturn(new String("filter123"));
+        Mockito.when(r1.getName()).thenReturn("r1");
+        Mockito.when(r2.test(any(JsonNode.class))).thenReturn(false);
+        Mockito.when(r2.getFilter()).thenReturn(new String("filter123"));
+        Mockito.when(r2.getName()).thenReturn("r2");
+        Mockito.when(r3.test(any(JsonNode.class))).thenReturn(true);
+        Mockito.when(r3.getFilter()).thenReturn(new String("filter345"));
+        Mockito.when(r3.getName()).thenReturn("r3");
+        Mockito.when(r4.test(any(JsonNode.class))).thenReturn(false);
+        Mockito.when(r4.getFilter()).thenReturn(new String("filter345"));
+        Mockito.when(r4.getName()).thenReturn("r4");
+        List<Rule> ruleList = Arrays.asList(r1, r2, r3, r4);
+        RuleServiceImpl ruleService = new RuleServiceImpl(ruleLoaderService);
+        ruleService.setRuleList(ruleList);
+
+        //when
+        ObjectMapper mapper = new ObjectMapper();
+        JsonNode actualObj = mapper.readTree(jsonString);
+        List<Rule> ruleMatched = ruleService.test(actualObj);
+
+        //then
+        assertThat(ruleMatched.size()).isEqualTo(1);
+        List<String> ruleNameMatched = ruleMatched.stream().map(rule -> rule.getName()).collect(Collectors.toList());
+        assertThat(ruleNameMatched).containsExactlyInAnyOrder("r1");
+    }
+
+
+    @Test
+    public void test_rule_withRealPredicates() throws Exception {
         //given
         RuleComponent rc1 = buildRuleGroup1();
         RuleComponent rc2 = buildRuleGroup2();
-        Rule r1 = ImmutableRule.of("r1", rc1, 1, new ArrayList<>());
-        Rule r2 = ImmutableRule.of("r2", rc2, 2, new ArrayList<>());
+        Rule r1 = ImmutableRule.of("r1", rc1, new String() ,1, new ArrayList<>());
+        Rule r2 = ImmutableRule.of("r2", rc2, new String() ,2, new ArrayList<>());
         RuleServiceImpl ruleService = new RuleServiceImpl(ruleLoaderService);
         ruleService.setRuleList(Arrays.asList(r2, r1));
         //when
@@ -164,8 +204,8 @@ class RuleServiceImplTest {
         //given
         RuleComponent rc1 = buildRuleGroup1();
         RuleComponent rc2 = buildRuleGroup2();
-        Rule r1 = ImmutableRule.of("r1", rc1, 1, new ArrayList<>());
-        Rule r2 = ImmutableRule.of("r2", rc2, 2, new ArrayList<>());
+        Rule r1 = ImmutableRule.of("r1", rc1, new String() ,1, new ArrayList<>());
+        Rule r2 = ImmutableRule.of("r2", rc2, new String() ,2, new ArrayList<>());
         RuleServiceImpl ruleService = new RuleServiceImpl(ruleLoaderService);
         ruleService.setRuleList(Arrays.asList(r2, r1));
         //when

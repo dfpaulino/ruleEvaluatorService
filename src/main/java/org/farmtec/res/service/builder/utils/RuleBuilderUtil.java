@@ -52,7 +52,7 @@ public class RuleBuilderUtil {
         }
 
         /**
-         * @param ruleGroupComposite {@code RuleComponent} that is composed by other {@code RuleGroupComposite}
+         * @param ruleGroupComposite {@code RuleComponent} that is composed by? other {@code RuleGroupComposite}
          * @return {@code RuleBuilder}
          */
         public RuleBuilder setRuleComponent(RuleComponent ruleGroupComposite) {
@@ -66,7 +66,7 @@ public class RuleBuilderUtil {
         }
 
         public Rule build() {
-            return ImmutableRule.of(this.name, this.ruleComponent, this.priority, this.actions);
+            return ImmutableRule.of(this.name, this.ruleComponent, new String() ,this.priority, this.actions);
         }
 
     }
