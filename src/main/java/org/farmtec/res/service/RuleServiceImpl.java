@@ -31,7 +31,7 @@ public class RuleServiceImpl implements RuleService {
   private Date lastUpdate;
   private final RuleLoaderService ruleLoaderService;
 
-  private Lock updateRulesLock = new ReentrantLock();
+  private final Lock updateRulesLock = new ReentrantLock();
 
   public RuleServiceImpl(RuleLoaderService ruleLoaderService) {
     this.ruleLoaderService = ruleLoaderService;
