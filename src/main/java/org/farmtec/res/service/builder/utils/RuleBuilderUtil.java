@@ -1,5 +1,6 @@
 package org.farmtec.res.service.builder.utils;
 
+import java.util.ArrayList;
 import org.farmtec.res.enums.LogicalOperation;
 import org.farmtec.res.enums.Operation;
 import org.farmtec.res.predicate.factory.PredicateGenerator;
@@ -26,32 +27,62 @@ public class RuleBuilderUtil {
     /**
      * Builder for {@link Rule}.
      * Rule is a simple Object that contains the RuleComposite created by {@link RuleComponentBuilder}
-     * Should set a Name, priority and a {@link org.farmtec.res.rules.impl.RuleGroupComposite}
+     * <p>
+     *   Must set a Name, priority {@link org.farmtec.res.rules.impl.RuleGroupComposite}
+     * </p>
+     * Optional, set filter and list of actions
+     *
      */
     public static class RuleBuilder {
         private String name;
-        private int priority;
+        private int priority = 0;
+        private String filter = "";
         private RuleComponent ruleComponent;
-        private List<Action> actions;
+        private List<Action> actions = new ArrayList<>();
 
         private RuleBuilder() {
         }
 
+        /**
+         * Create a new instance of  a builder
+         * @return {@link RuleBuilder}
+         */
         public static RuleBuilder newInstance() {
             return new RuleBuilder();
         }
 
+        /**
+         * Set Rule Name
+         * @param name must not be null
+         * @return {@link RuleBuilder}
+         */
         public RuleBuilder setName(String name) {
             this.name = name;
             return this;
         }
 
+        /**
+         * set rule priority
+         * @param priority int >=0
+         * @return {@link RuleBuilder}
+         */
         public RuleBuilder setPriority(int priority) {
             this.priority = priority;
             return this;
         }
 
         /**
+         * Set filter. This will be compared with the filter tag sent in the JsonNode
+         * @param filter {@link String}
+         * @return
+         */
+        public RuleBuilder setFilter(String filter) {
+            this.filter = filter;
+            return this;
+        }
+
+        /**
+         * Set Rule component
          * @param ruleGroupComposite {@code RuleComponent} that is composed by? other {@code RuleGroupComposite}
          * @return {@code RuleBuilder}
          */
@@ -60,13 +91,18 @@ public class RuleBuilderUtil {
             return this;
         }
 
+        /**
+         * Set List of Actions
+         * @param actions Must not be null {@link List<Action>}
+         * @return {@code RuleBuilder}
+         */
         public RuleBuilder setActions(List<Action> actions) {
             this.actions = actions;
             return this;
         }
 
         public Rule build() {
-            return ImmutableRule.of(this.name, this.ruleComponent, new String() ,this.priority, this.actions);
+            return ImmutableRule.of(this.name, this.ruleComponent, this.filter ,this.priority, this.actions);
         }
 
     }
