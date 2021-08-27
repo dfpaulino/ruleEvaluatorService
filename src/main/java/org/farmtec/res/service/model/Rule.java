@@ -30,6 +30,9 @@ public abstract class Rule {
     public abstract RuleComponent getRuleGroupComposite();
 
     @Value.Parameter
+    public abstract String getFilter();
+
+    @Value.Parameter
     public abstract int getPriority();
 
     @Value.Parameter

@@ -1,5 +1,6 @@
 package org.farmtec.res.service.rule.loader.dto;
 
+import java.util.ArrayList;
 import org.farmtec.res.rules.RuleComponent;
 import org.farmtec.res.service.model.Action;
 import org.immutables.value.Value;
@@ -13,8 +14,9 @@ import java.util.List;
 public class RuleDto {
 
     private String predicateName;
-    private int priority;
-    private List<Action> actions;
+    private int priority = -1;
+    private String filter = new String();
+    private List<Action> actions = new ArrayList<>();
 
     public boolean isComplete() {
         return predicateName != null && priority > 0;
@@ -31,6 +33,11 @@ public class RuleDto {
     public int getPriority() {
         return priority;
     }
+
+    public void setFilter(String filter) {
+        this.filter = filter;
+    }
+    public String getFilter() { return this.filter;}
 
     public void setPriority(int priority) {
         this.priority = priority;
@@ -49,6 +56,7 @@ public class RuleDto {
         return "RuleDto{" +
                 "predicateName='" + predicateName + '\'' +
                 ", priority=" + priority +
+                ", filter=" + filter +
                 ", actions=" + actions +
                 '}';
     }

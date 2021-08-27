@@ -133,6 +133,7 @@ public class RuleLoaderServiceImpl implements RuleLoaderService {
         for (String ruleName : rulesParser.getRulesDto().keySet()) {
             rules.add(RuleBuilderUtil.RuleBuilder.newInstance()
                     .setPriority(rulesParser.getRulesDto().get(ruleName).getPriority())
+                    .setFilter(rulesParser.getRulesDto().get(ruleName).getFilter())
                     .setName(ruleName)
                     .setActions(new ArrayList<>())
                     .setRuleComponent(getAndCreateRuleComponent(rulesParser.getRulesDto().get(ruleName).getPredicateName(),
