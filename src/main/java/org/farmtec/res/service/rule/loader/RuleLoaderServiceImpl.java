@@ -135,7 +135,7 @@ public class RuleLoaderServiceImpl implements RuleLoaderService {
                     .setPriority(rulesParser.getRulesDto().get(ruleName).getPriority())
                     .setFilter(rulesParser.getRulesDto().get(ruleName).getFilter())
                     .setName(ruleName)
-                    .setActions(new ArrayList<>())
+                    .setActions(rulesParser.getRulesDto().get(ruleName).getActions())
                     .setRuleComponent(getAndCreateRuleComponent(rulesParser.getRulesDto().get(ruleName).getPredicateName(),
                             ruleComponentMap,
                             rulesParser.getGroupCompositesDto()))

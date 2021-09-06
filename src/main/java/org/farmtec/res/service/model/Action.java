@@ -10,4 +10,8 @@ public abstract class Action {
 
     @Parameter
     public abstract String getData();
+
+    @Parameter
+    public abstract int getPriority();
+
 }
