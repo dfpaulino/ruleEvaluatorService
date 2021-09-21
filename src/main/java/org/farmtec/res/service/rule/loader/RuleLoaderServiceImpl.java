@@ -10,6 +10,7 @@ import org.farmtec.res.service.exceptions.InvalidOperation;
 import org.farmtec.res.service.model.Rule;
 import org.farmtec.res.service.rule.loader.dto.GroupCompositeDto;
 import org.farmtec.res.service.rule.loader.dto.LeafDto;
+import org.farmtec.res.service.rule.loader.dto.RuleDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -130,13 +131,15 @@ public class RuleLoaderServiceImpl implements RuleLoaderService {
         //for each rule get the ruleComponent using the {getAndCreateRuleComponent} recusive method
 
         List<Rule> rules = new ArrayList<>();
-        for (String ruleName : rulesParser.getRulesDto().keySet()) {
+        Map<String, RuleDto> rulesDto = rulesParser.getRulesDto();
+        for (String ruleName : rulesDto.keySet()) {
+            logger.debug("building rule name [{}]",ruleName);
             rules.add(RuleBuilderUtil.RuleBuilder.newInstance()
-                    .setPriority(rulesParser.getRulesDto().get(ruleName).getPriority())
-                    .setFilter(rulesParser.getRulesDto().get(ruleName).getFilter())
+                    .setPriority(rulesDto.get(ruleName).getPriority())
+                    .setFilter(rulesDto.get(ruleName).getFilter())
                     .setName(ruleName)
-                    .setActions(rulesParser.getRulesDto().get(ruleName).getActions())
-                    .setRuleComponent(getAndCreateRuleComponent(rulesParser.getRulesDto().get(ruleName).getPredicateName(),
+                    .setActions(rulesDto.get(ruleName).getActions())
+                    .setRuleComponent(getAndCreateRuleComponent(rulesDto.get(ruleName).getPredicateName(),
                             ruleComponentMap,
                             rulesParser.getGroupCompositesDto()))
                     .build());
