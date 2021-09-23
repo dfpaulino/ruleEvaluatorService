@@ -132,6 +132,7 @@ public class RuleLoaderServiceImpl implements RuleLoaderService {
 
         List<Rule> rules = new ArrayList<>();
         Map<String, RuleDto> rulesDto = rulesParser.getRulesDto();
+        Map<String ,GroupCompositeDto> groupCompositeDtoMap = rulesParser.getGroupCompositesDto();
         for (String ruleName : rulesDto.keySet()) {
             logger.debug("building rule name [{}]",ruleName);
             rules.add(RuleBuilderUtil.RuleBuilder.newInstance()
@@ -141,10 +142,9 @@ public class RuleLoaderServiceImpl implements RuleLoaderService {
                     .setActions(rulesDto.get(ruleName).getActions())
                     .setRuleComponent(getAndCreateRuleComponent(rulesDto.get(ruleName).getPredicateName(),
                             ruleComponentMap,
-                            rulesParser.getGroupCompositesDto()))
+                            groupCompositeDtoMap))
                     .build());
         }
-
         return rules;
     }
 
