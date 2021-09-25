@@ -18,21 +18,26 @@ public abstract class RuleGroupComposite implements RuleComponent {
 
     @Override
     public boolean testRule(JsonNode jsonNode) {
-        //TODO loop the components and test the operation return false;
         List<Boolean> booleanList = this.getRules().stream().map((rule) -> rule.testRule(jsonNode)).collect(Collectors.toList());
         boolean bool=false;
+
         if (booleanList.size()==1) {
             if (this.getLogicalOperation().equals(LogicalOperation.NOT)) {
                 return !booleanList.get(0);
             }
             return booleanList.get(0);
+
         } else if (booleanList.size()>=2) {
-            //TODO use .reduce()
-            bool=this.getLogicalOperation().test(booleanList.get(0),booleanList.get(1));
-            for (int i=2;i<booleanList.size();i++) {
-                bool=this.getLogicalOperation().test(bool,booleanList.get(i));
+            boolean identity = false;
+            if(this.getLogicalOperation() == LogicalOperation.AND) {
+                identity = true;
             }
+            return booleanList.stream()
+                .reduce(identity,
+                    (totalBool,currentBool) ->this.getLogicalOperation().test(totalBool,currentBool)
+                );
         }
+        // if it gets here means list is empty...
         return bool;
     }
 }
