@@ -5,7 +5,7 @@
 
   <groupId>org.farmtec.res</groupId>
   <artifactId>rule-evaluator-core</artifactId>
-  <version>2.0.3-SNAPSHOT</version>
+  <version>3.0.0-SNAPSHOT</version>
 
   <name>rule-evaluator</name>
   <!-- FIXME change it to the project's website -->
@@ -19,10 +19,11 @@
   </scm>
 
    <properties>
-    <java.version>11</java.version>
+    <java.version>17</java.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.source>${java.version}</maven.compiler.source>
     <maven.compiler.target>${java.version}</maven.compiler.target>
+     <maven.compiler.release>${java.version}</maven.compiler.release>
     <project.scm.id>github</project.scm.id>
   </properties>
 
@@ -130,9 +131,9 @@
         </plugin>
         <plugin>
           <artifactId>maven-compiler-plugin</artifactId>
-          <version>3.8.1</version>
+          <version>3.11.0</version>
           <configuration>
-            <release>11</release>
+            <release>17</release>
           </configuration>
         </plugin>
         <plugin>
@@ -182,6 +183,11 @@
       </plugin>
       <plugin>
         <artifactId>maven-failsafe-plugin</artifactId>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
       </plugin>
 
     </plugins>

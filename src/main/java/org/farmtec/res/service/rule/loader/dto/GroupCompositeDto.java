@@ -1,7 +1,5 @@
 package org.farmtec.res.service.rule.loader.dto;
 
-import org.immutables.value.Value;
-
 import java.util.List;
 
 /**
